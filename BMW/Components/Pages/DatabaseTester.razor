@@ -1,0 +1,43 @@
+@page "/DatabaseTester"
+@using BMW.Data.Models
+@inject BMW.Data.ApplicationDbContext DbContext
+@using Microsoft.EntityFrameworkCore
+
+<h3>Testar Ligação à Base de Dados</h3>
+
+@if (Clientes == null || Clientes.Count == 0)
+{
+    <p>Nenhum cliente encontrado ou a carregar...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in Clientes)
+            {
+                <tr>
+                    <td>@cliente.IdUtilizador</td>
+                    <td>@cliente.Email</td>
+                    <td>@cliente.Nome</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Utilizador> Clientes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Carrega apenas os utilizadores que são clientes
+        Clientes = await DbContext.Utilizador.Where(u => u.IsCliente).ToListAsync();
+    }
+}

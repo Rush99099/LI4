@@ -1,0 +1,101 @@
+@page "/admin/gestor-funcionarios"
+
+<PageTitle>Gestão de Funcionários</PageTitle>
+
+<TableLayout 
+    UserName="Diogo Fernandes"
+    UserRole="Admin"
+    Button1Text="Gestão de Funcionários"
+    Button1Href="/admin/gestor-funcionarios"
+    Button1Icon="👥"
+    Button2Text="Gestão de Veículos"
+    Button2Href="/admin/gestor-veiculos"
+    Button2Icon="🚗"
+    Title="Gestão de Funcionários">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Data de Contratação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>001</td>
+                <td>João Silva</td>
+                <td>joao.silva@bmwmanager.com</td>
+                <td>15-01-2023</td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>Maria Oliveira</td>
+                <td>maria.oliveira@bmwmanager.com</td>
+                <td>10-07-2022</td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>Pedro Almeida</td>
+                <td>pedro.almeida@bmwmanager.com</td>
+                <td>05-03-2023</td>
+            </tr>
+            <tr>
+                <td>004</td>
+                <td>Ana Santos</td>
+                <td>ana.santos@bmwmanager.com</td>
+                <td>01-12-2022</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="actions">
+        <button class="btn btn-primary">Adicionar Funcionário</button>
+        <button class="btn btn-primary">Remover Funcionário</button>
+    </div>
+</TableLayout>
+
+<style>
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    .table tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+</style>

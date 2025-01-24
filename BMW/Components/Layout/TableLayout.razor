@@ -1,0 +1,65 @@
+@inherits LayoutComponentBase
+
+<SidebarLayout 
+    UserName="@UserName" 
+    UserRole="@UserRole"
+    Button1Text="@Button1Text"
+    Button1Href="@Button1Href"
+    Button1Icon="@Button1Icon"
+    Button2Text="@Button2Text"
+    Button2Href="@Button2Href"
+    Button2Icon="@Button2Icon">
+
+    <div class="table-container">
+        <h2 class="table-title">@Title</h2>
+        @ChildContent
+    </div>
+</SidebarLayout>
+
+@code {
+    [Parameter]
+    public string UserName { get; set; } = "Utilizador";
+
+    [Parameter]
+    public string UserRole { get; set; } = "Perfil";
+
+    [Parameter]
+    public string Button1Text { get; set; } = "Botão 1";
+    [Parameter]
+    public string Button1Href { get; set; } = "#";
+    [Parameter]
+    public string Button1Icon { get; set; } = "🔗";
+
+    [Parameter]
+    public string Button2Text { get; set; } = "Botão 2";
+    [Parameter]
+    public string Button2Href { get; set; } = "#";
+    [Parameter]
+    public string Button2Icon { get; set; } = "🔗";
+
+    [Parameter]
+    public string Title { get; set; } = "Gestão";
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
+
+<style>
+    .table-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 30px auto;
+        width: 90%;
+        height: 90vh; 
+        overflow-y: auto;
+    }
+
+    .table-title {
+        color: #121212;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+</style>

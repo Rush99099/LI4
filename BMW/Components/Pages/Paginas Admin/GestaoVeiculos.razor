@@ -1,0 +1,112 @@
+@page "/admin/gestor-veiculos"
+
+<PageTitle>Gestão de Veículos</PageTitle>
+
+<TableLayout 
+    UserName="Diogo Fernandes"
+    UserRole="Admin"
+    Button1Text="Gestão de Funcionários"
+    Button1Href="/admin/gestor-funcionarios"
+    Button1Icon="👥"
+    Button2Text="Gestão de Veículos"
+    Button2Href="/admin/gestor-veiculos"
+    Button2Icon="🚗"
+    Title="Gestão de Veículos">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Modelo</th>
+                <th>Categoria</th>
+                <th>Estado</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>001</td>
+                <td>BMW i7</td>
+                <td>Elétrico</td>
+                <td>Disponível</td>
+                <td><button class="btn btn-danger">Remover</button></td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>BMW X6</td>
+                <td>SUV</td>
+                <td>Em Produção</td>
+                <td><button class="btn btn-danger">Remover</button></td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>BMW M4 Coupé</td>
+                <td>Desportivo</td>
+                <td>Indisponível</td>
+                <td><button class="btn btn-danger">Remover</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="actions">
+        <button class="btn btn-primary">Adicionar Veículo</button>
+    </div>
+</TableLayout>
+
+<style>
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    .table tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-danger {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #0056b3;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>

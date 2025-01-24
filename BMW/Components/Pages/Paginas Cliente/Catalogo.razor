@@ -1,0 +1,122 @@
+@page "/catalogo"
+
+<PageTitle>Catálogo</PageTitle>
+
+<TableLayout 
+    UserName="Diogo Fernandes"
+    UserRole="Cliente"
+    Button1Text="Encomendas"
+    Button1Href="/encomendas"
+    Button1Icon="📦"
+    Button2Text="Catálogo"
+    Button2Href="/catalogo"
+    Button2Icon="🛒"
+    Title="Catálogo de Veículos BMW">
+
+    <div class="catalog-container">
+        @foreach (var modelo in ModelosBMW)
+        {
+            <div class="catalog-item">
+                <img src="@modelo.Imagem" alt="@modelo.Nome" class="car-image" />
+                <h3 class="car-name">@modelo.Nome</h3>
+                <p><strong>Preço: </strong>@modelo.Preco €</p>
+                <button class="btn-encomendar" @onclick="() => Encomendar(modelo.Nome)">Encomendar</button>
+            </div>
+        }
+    </div>
+</TableLayout>
+
+@code {
+    private List<ModeloBMW> ModelosBMW = new List<ModeloBMW>
+    {
+        new ModeloBMW
+        {
+            Nome = "BMW Série 3",
+            Preco = 45000,
+            Imagem = "images/bmw-serie3.jpg"
+        },
+        new ModeloBMW
+        {
+            Nome = "BMW X5",
+            Preco = 75000,
+            Imagem = "images/bmw-x5.jpg"
+        },
+        new ModeloBMW
+        {
+            Nome = "BMW i7",
+            Preco = 120000,
+            Imagem = "images/bmw-i7.jpg"
+        },
+        new ModeloBMW
+        {
+            Nome = "BMW Z4",
+            Preco = 60000,
+            Imagem = "images/bmw-z4.jpg"
+        }
+    };
+
+    private void Encomendar(string modelo)
+    {
+        // Lógica para encomendar o modelo de veículo.
+        Console.WriteLine($"Modelo encomendado: {modelo}");
+    }
+
+    public class ModeloBMW
+    {
+        public string Nome { get; set; } = string.Empty;
+        public decimal Preco { get; set; }
+        public string Imagem { get; set; } = string.Empty;
+    }
+}
+
+<style>
+    .catalog-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .catalog-item {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        width: 250px;
+    }
+
+    .car-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .car-name {
+        color: #333333;
+        margin: 10px 0;
+        font-size: 1.2rem;
+    }
+
+    .catalog-item p {
+        margin: 5px 0;
+        color: #555555;
+    }
+
+    .btn-encomendar {
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-encomendar:hover {
+        background-color: #0056b3;
+    }
+</style>

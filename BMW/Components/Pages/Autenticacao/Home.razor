@@ -1,0 +1,86 @@
+﻿@page "/"
+
+<PageTitle>BMW Assembly Manager</PageTitle>
+
+<div class="home-container">
+    <div class="content">
+        <div class="logo">
+            <img src="images/bmw-logo.png" alt="BMW Logo" />
+        </div>
+        <div class="title">
+            <h1>BMW</h1>
+            <h2>Assembly Manager</h2>
+        </div>
+        <div class="navigation-buttons">
+            <NavLink href="/login" class="btn btn-primary">Login</NavLink>
+            <NavLink href="/register" class="btn btn-primary">Register</NavLink>
+        </div>
+    </div>
+</div>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #121212; 
+        color: white;
+    }
+
+    .home-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; 
+    }
+
+    .content {
+        text-align: center;
+        width: 100%;
+        max-width: 400px; 
+    }
+
+    .logo img {
+        width: 250px;
+        height: auto; 
+    }
+
+    .title h1 {
+        margin: 0;
+        font-size: 2.5rem; 
+    }
+
+    .title h2 {
+        margin: 0;
+        color: #cccccc; 
+        font-size: 1.2rem;
+    }
+
+    .navigation-buttons {
+        margin-top: 40px; 
+    }
+
+    .btn {
+        padding: 10px 60px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3; 
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+</style>
