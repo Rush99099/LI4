@@ -108,29 +108,29 @@ namespace BMW.Data.Data
             var progresso = new Progresso(encomendaId, faseId, dataInicio, dataFim, "Progresso registado", idFuncionario);
             _progressoDAO.Put(progresso);
         }
-        /*
+        
         // 6. Gestão de Alertas
         public ICollection<Alerta> GetAlertas()
         {
             return _alertaDAO.GetAll();
         }
-
+        
         public void RegistarAlerta(int encomendaId, int funcionarioId, string mensagem, DateTime data)
         {
             var alerta = new Alerta(0, encomendaId, mensagem, data);
             _alertaDAO.Put(alerta);
         }
-
+        
         // 7. Gestão de Relatórios
         public void CriarRelatorio(int tipo, string conteudo, int funcionarioId)
         {
             var relatorio = new Relatorio(0, tipo, DateTime.Now, conteudo, funcionarioId.ToString());
             _relatorioDAO.Put(relatorio);
         }
-
+        
         public Relatorio? DownloadRelatorio(int relatorioId)
         {
             return _relatorioDAO.Get(relatorioId);
-        } */
+        }
     } 
 }
