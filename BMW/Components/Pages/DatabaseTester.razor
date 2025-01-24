@@ -38,6 +38,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         // Carrega apenas os utilizadores que são clientes
-        Clientes = await DbContext.Utilizador.Where(u => u.IsCliente).ToListAsync();
+        Clientes = await DbContext.Utilizador.Where(u => u.IsClient).ToListAsync();
     }
 }

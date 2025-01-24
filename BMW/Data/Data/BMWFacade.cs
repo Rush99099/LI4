@@ -35,14 +35,14 @@ namespace BMW.Data.Data
             }
             return _instance;
         }
-        /*
+        
         // 1. Autenticação e Gestão de Utilizadores
         public void Registar(string email, string password, string nome, bool isCliente)
         {
             var utilizador = new Utilizador(0, email, nome, password, isCliente);
-            _utilizadorDAO.put(utilizador);
+            _utilizadorDAO.Put(utilizador);
         }
-        *
+        /*
         public Utilizador? LogIn(string email, string password)
         {
             var utilizador = _utilizadorDAO.GetByEmail(email);

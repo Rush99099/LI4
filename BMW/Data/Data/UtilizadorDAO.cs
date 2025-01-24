@@ -18,6 +18,35 @@ namespace BMW.Data.Data
             return singleton;
         }
 
+        public bool ContainsEmail(string email)
+        {
+            bool result = false;
+            string query = "SELECT * FROM Utilizador WHERE email = @email";
+            try
+            {
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@email", email);
+                        con.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new DAOException("Erro no ContainsKey do UtilizadorDAO");
+            }
+            return result;
+        }
+
         public bool ContainsKey(int key)
         {
             bool result = false;
@@ -47,7 +76,7 @@ namespace BMW.Data.Data
             return result;
         }
 
-        public Utilizador Get(int key)
+        public Utilizador? Get(int key)
         {
             Utilizador? utilizador = null;
             string query = "SELECT * FROM Utilizador WHERE IdUtilizador = @Key";
@@ -81,17 +110,51 @@ namespace BMW.Data.Data
             }
             return utilizador;
         }
+        public Utilizador? GetByEmail(string email)
+        {
+            Utilizador? utilizador = null;
+            string query = "SELECT * FROM Utilizador WHERE IdUtilizador = @Email";
+            try
+            {
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        con.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int id = reader.GetInt32(reader.GetOrdinal("IdUtilizador"));
+                                //string email = reader.GetString(reader.GetOrdinal("Email"));
+                                string nome = reader.GetString(reader.GetOrdinal("Nome"));
+                                string password = reader.GetString(reader.GetOrdinal("Password"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("IsClient"));
 
-        public void put(int key, Utilizador value)
+                                utilizador = new Utilizador(id, email, nome, password, isClient);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new DAOException("Erro no Get do UtilizadorDAO");
+            }
+            return utilizador;
+        }
+
+        public void Put(Utilizador value) //put sem key, id de novos utilizadores sao auto increment
         {
             string query;
-            if (ContainsKey(key))
+            if (ContainsEmail(value.Email))
             {
-                query = "UPDATE Utilizador SET Email = @Email, Nome = @Nome, Password = @Password, IsClient = @IsClient WHERE IdUtilizador = @Key";
+                query = "UPDATE Utilizador SET Email = @Email, Nome = @Nome, Password = @Password, IsClient = @IsClient WHERE email = @Email";
             }
             else
             {
-                query = "INSERT INTO Utilizador (IdUtilizador, Email, Nome, Password, IsClient) VALUES (@Key, @Email, @Nome, @Password, @IsClient)";
+                query = "INSERT INTO Utilizador (Email, Nome, Password, IsClient) VALUES (@Email, @Nome, @Password, @IsClient)";
             }
             try
             {
@@ -99,7 +162,7 @@ namespace BMW.Data.Data
                 {
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
-                        cmd.Parameters.AddWithValue("@Key", key);
+                        //cmd.Parameters.AddWithValue("@Key", key);
                         cmd.Parameters.AddWithValue("@Email", value.Email);
                         cmd.Parameters.AddWithValue("@Nome", value.Nome);
                         cmd.Parameters.AddWithValue("@Password", value.Password);
@@ -115,7 +178,7 @@ namespace BMW.Data.Data
             }
         }
 
-        public Utilizador Remove(int key)
+        public void Remove(int key)
         {
             Utilizador? utilizador = Get(key);
             if (utilizador != null)
@@ -138,7 +201,6 @@ namespace BMW.Data.Data
                     throw new DAOException("Erro no Remove do UtilizadorDAO");
                 }
             }
-            return utilizador;
         }
 
         public ICollection<Utilizador> Values()

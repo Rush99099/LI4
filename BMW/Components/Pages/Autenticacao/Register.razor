@@ -2,6 +2,7 @@
 @using BMW.Data.Data
 @using BMW.Data.Models
 
+
 <PageTitle>Register</PageTitle>
 
 <div class="container" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #121212; color: white;">
@@ -14,18 +15,26 @@
             <h2 style="margin: 0; color: #cccccc; font-size: 1.2rem;">Assembly Manager</h2>
         </div>
         <div class="form" style="margin-top: 40px;">
-            <input type="text" placeholder="Enter your name" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
-            <input type="email" placeholder="Enter your email" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
-            <input type="password" placeholder="Enter your password" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 20px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
+            <input type="text" @bind="utilizador.Nome" placeholder="Enter your name" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
+            <input type="email" @bind="utilizador.Email" placeholder="Enter your email" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
+            <input type="password" @bind="utilizador.Password" placeholder="Enter your password" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 20px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
             <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 16px; background-color: #007bff; border: none; border-radius: 5px; color: white;" @onclick="HandleRegister">Register</button>
         </div>
     </div>
 </div>
 
 @code {
+    private Utilizador utilizador = new Utilizador();
     private void HandleRegister()
     {
         // Lógica de registo pode ser adicionada aqui
         // Console.WriteLine("Register clicked!");
+        // Validaçao basica
+        if (string.IsNullOrEmpty(utilizador.Nome) || string.IsNullOrEmpty(utilizador.Email) || string.IsNullOrEmpty(utilizador.Password))
+        {
+            Console.WriteLine("Todos os campos não estão preenchidos");
+            return;
+        }
+        BMWFacade.GetInstance().Registar(utilizador.Email, utilizador.Password, utilizador.Nome, true);
     }
 }

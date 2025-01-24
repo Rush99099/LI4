@@ -5070,19 +5070,19 @@
     ]
   },
   "packageFolders": {
-    "/home/samuel/.nuget/packages/": {}
+    "C:\\Users\\tmsrm\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/samuel/BMW/BMW/BMW.csproj",
+      "projectUniqueName": "C:\\Users\\tmsrm\\Documents\\LI4\\LI4\\BMW\\BMW.csproj",
       "projectName": "BMW",
-      "projectPath": "/home/samuel/BMW/BMW/BMW.csproj",
-      "packagesPath": "/home/samuel/.nuget/packages/",
-      "outputPath": "/home/samuel/BMW/BMW/obj/",
+      "projectPath": "C:\\Users\\tmsrm\\Documents\\LI4\\LI4\\BMW\\BMW.csproj",
+      "packagesPath": "C:\\Users\\tmsrm\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\tmsrm\\Documents\\LI4\\LI4\\BMW\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/samuel/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\tmsrm\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -5146,7 +5146,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
