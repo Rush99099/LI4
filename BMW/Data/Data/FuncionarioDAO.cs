@@ -25,7 +25,7 @@ namespace BMW.Data.Data
         // Verifica se um funcionário existe na base de dados pelo ID
         public bool ContainsKey(int idFuncionario)
         {
-            string query = "SELECT COUNT(*) FROM Funcionario WHERE IdFuncionario = @IdFuncionario";
+            string query = "SELECT COUNT(*) FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -48,7 +48,7 @@ namespace BMW.Data.Data
         // Obtém um funcionário pelo ID
         public Funcionario? Get(int idFuncionario)
         {
-            string query = "SELECT * FROM Funcionario WHERE IdFuncionario = @IdFuncionario";
+            string query = "SELECT * FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -61,13 +61,13 @@ namespace BMW.Data.Data
                         {
                             if (reader.Read())
                             {
-                                int? supervisor = reader.IsDBNull(reader.GetOrdinal("Supervisor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Supervisor"));
+                                int? supervisor = reader.IsDBNull(reader.GetOrdinal("Supervisor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("supervisor"));
 
                                 return new Funcionario(
-                                    reader.GetInt32(reader.GetOrdinal("IdFuncionario")),
-                                    reader.GetDateTime(reader.GetOrdinal("ContractDate")),
+                                    reader.GetInt32(reader.GetOrdinal("idFuncionario")),
+                                    reader.GetDateTime(reader.GetOrdinal("contractDate")),
                                     reader.GetInt32(reader.GetOrdinal("Posicao")),
-                                    reader.GetInt32(reader.GetOrdinal("Supervisor")) 
+                                    reader.GetInt32(reader.GetOrdinal("supervisor")) 
                                 );
                             }
                         }
@@ -86,8 +86,8 @@ namespace BMW.Data.Data
         public void Put(Funcionario funcionario)
         {
             string query = ContainsKey(funcionario.IdFuncionario)
-                ? "UPDATE Funcionario SET ContractDate = @ContractDate, Posicao = @Posicao, Supervisor = @Supervisor WHERE IdFuncionario = @IdFuncionario"
-                : "INSERT INTO Funcionario (IdFuncionario, ContractDate, Posicao, Supervisor) VALUES (@IdFuncionario, @ContractDate, @Posicao, @Supervisor)";
+                ? "UPDATE Funcionario SET contractDate = @ContractDate, Posicao = @Posicao, supervisor = @Supervisor WHERE idFuncionario = @IdFuncionario"
+                : "INSERT INTO Funcionario (idFuncionario, ContractDate, Posicao, supervisor) VALUES (@IdFuncionario, @ContractDate, @Posicao, @Supervisor)";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -112,7 +112,7 @@ namespace BMW.Data.Data
         // Remove um funcionário pelo ID
         public void Remove(int idFuncionario)
         {
-            string query = "DELETE FROM Funcionario WHERE IdFuncionario = @IdFuncionario";
+            string query = "DELETE FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -148,10 +148,10 @@ namespace BMW.Data.Data
                             while (reader.Read())
                             {
                                 var funcionario = new Funcionario(
-                                    reader.GetInt32(reader.GetOrdinal("IdFuncionario")),
+                                    reader.GetInt32(reader.GetOrdinal("idFuncionario")),
                                     reader.GetDateTime(reader.GetOrdinal("ContractDate")),
                                     reader.GetInt32(reader.GetOrdinal("Posicao")),
-                                    reader.GetInt32(reader.GetOrdinal("Supervisor")) 
+                                    reader.GetInt32(reader.GetOrdinal("supervisor")) 
                                 );
                                 funcionarios.Add(funcionario);
                             }

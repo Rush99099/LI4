@@ -85,8 +85,8 @@ namespace BMW.Data.Data
         public void Put(Encomenda encomenda)
         {
             string query = ContainsKey(encomenda.Id)
-                ? "UPDATE Encomenda SET DataRegisto = @DataRegisto, Observacoes = @Observacoes, IdCliente = @IdCliente, IdVeiculo = @IdVeiculo, Estado = @Estado WHERE Id = @Id"
-                : "INSERT INTO Encomenda (Id, DataRegisto, Observacoes, IdCliente, IdVeiculo, Estado) VALUES (@Id, @DataRegisto, @Observacoes, @IdCliente, @IdVeiculo, @Estado)";
+                ? "UPDATE Encomenda SET DataRegisto = @DataRegisto, Observacoes = @Observacoes, idCliente = @IdCliente, idVeiculo = @IdVeiculo, Estado = @Estado WHERE idEncomenda = @Id"
+                : "INSERT INTO Encomenda (idEncomenda, DataRegisto, Observacoes, idCliente, idVeiculo, Estado) VALUES (@Id, @DataRegisto, @Observacoes, @IdCliente, @IdVeiculo, @Estado)";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -149,11 +149,48 @@ namespace BMW.Data.Data
                             while (reader.Read())
                             {
                                 var encomenda = new Encomenda(
-                                    reader.GetInt32(reader.GetOrdinal("Id")),
+                                    reader.GetInt32(reader.GetOrdinal("idEncomenda")),
                                     reader.GetDateTime(reader.GetOrdinal("DataRegisto")),
                                     reader.IsDBNull(reader.GetOrdinal("Observacoes")) ? null : reader.GetString(reader.GetOrdinal("Observacoes")),
-                                    reader.GetInt32(reader.GetOrdinal("IdCliente")),
-                                    reader.GetInt32(reader.GetOrdinal("IdVeiculo")),
+                                    reader.GetInt32(reader.GetOrdinal("idCliente")),
+                                    reader.GetInt32(reader.GetOrdinal("idVeiculo")),
+                                    reader.GetInt32(reader.GetOrdinal("Estado"))
+                                );
+                                encomendas.Add(encomenda);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DAOException($"Erro ao obter todas as encomendas: {ex.Message}");
+            }
+            return encomendas;
+        }
+
+        public ICollection<Encomenda> GetByClienteID(int id)
+        {
+            string query = "SELECT * FROM Encomenda WHERE idEncomenda = @Id ";
+            var encomendas = new List<Encomenda>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", id);
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var encomenda = new Encomenda(
+                                    reader.GetInt32(reader.GetOrdinal("idEncomenda")),
+                                    reader.GetDateTime(reader.GetOrdinal("DataRegisto")),
+                                    reader.IsDBNull(reader.GetOrdinal("Observacoes")) ? null : reader.GetString(reader.GetOrdinal("Observacoes")),
+                                    reader.GetInt32(reader.GetOrdinal("idCliente")),
+                                    reader.GetInt32(reader.GetOrdinal("idVeiculo")),
                                     reader.GetInt32(reader.GetOrdinal("Estado"))
                                 );
                                 encomendas.Add(encomenda);

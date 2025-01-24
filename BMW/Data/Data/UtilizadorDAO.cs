@@ -50,7 +50,7 @@ namespace BMW.Data.Data
         public bool ContainsKey(int key)
         {
             bool result = false;
-            string query = "SELECT * FROM Utilizador WHERE IdUtilizador = @Key";
+            string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Key";
             try
             {
                 using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -79,7 +79,7 @@ namespace BMW.Data.Data
         public Utilizador? Get(int key)
         {
             Utilizador? utilizador = null;
-            string query = "SELECT * FROM Utilizador WHERE IdUtilizador = @Key";
+            string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Key";
             try
             {
                 using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -92,11 +92,11 @@ namespace BMW.Data.Data
                         {
                             if (reader.Read())
                             {
-                                int id = reader.GetInt32(reader.GetOrdinal("IdUtilizador"));
-                                string email = reader.GetString(reader.GetOrdinal("Email"));
-                                string nome = reader.GetString(reader.GetOrdinal("Nome"));
+                                int id = reader.GetInt32(reader.GetOrdinal("idUtilizador"));
+                                string email = reader.GetString(reader.GetOrdinal("email"));
+                                string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("IsClient"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
 
                                 utilizador = new Utilizador(id, email, nome, password, isClient);
                             }
@@ -113,7 +113,7 @@ namespace BMW.Data.Data
         public Utilizador? GetByEmail(string email)
         {
             Utilizador? utilizador = null;
-            string query = "SELECT * FROM Utilizador WHERE IdUtilizador = @Email";
+            string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Email";
             try
             {
                 using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -126,11 +126,11 @@ namespace BMW.Data.Data
                         {
                             if (reader.Read())
                             {
-                                int id = reader.GetInt32(reader.GetOrdinal("IdUtilizador"));
+                                int id = reader.GetInt32(reader.GetOrdinal("idUtilizador"));
                                 //string email = reader.GetString(reader.GetOrdinal("Email"));
-                                string nome = reader.GetString(reader.GetOrdinal("Nome"));
+                                string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("IsClient"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
 
                                 utilizador = new Utilizador(id, email, nome, password, isClient);
                             }
@@ -150,11 +150,11 @@ namespace BMW.Data.Data
             string query;
             if (ContainsEmail(value.Email))
             {
-                query = "UPDATE Utilizador SET Email = @Email, Nome = @Nome, Password = @Password, IsClient = @IsClient WHERE email = @Email";
+                query = "UPDATE Utilizador SET email = @Email, nome = @Nome, Password = @Password, isClient = @IsClient WHERE email = @Email";
             }
             else
             {
-                query = "INSERT INTO Utilizador (Email, Nome, Password, IsClient) VALUES (@Email, @Nome, @Password, @IsClient)";
+                query = "INSERT INTO Utilizador (email, nome, Password, isClient) VALUES (@Email, @Nome, @Password, @IsClient)";
             }
             try
             {
@@ -183,7 +183,7 @@ namespace BMW.Data.Data
             Utilizador? utilizador = Get(key);
             if (utilizador != null)
             {
-                string query = "DELETE FROM Utilizador WHERE IdUtilizador = @Key";
+                string query = "DELETE FROM Utilizador WHERE idUtilizador = @Key";
                 try
                 {
                     using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -218,11 +218,11 @@ namespace BMW.Data.Data
                         {
                             while (reader.Read())
                             {
-                                int id = reader.GetInt32(reader.GetOrdinal("IdUtilizador"));
-                                string email = reader.GetString(reader.GetOrdinal("Email"));
-                                string nome = reader.GetString(reader.GetOrdinal("Nome"));
+                                int id = reader.GetInt32(reader.GetOrdinal("idUtilizador"));
+                                string email = reader.GetString(reader.GetOrdinal("email"));
+                                string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("IsClient"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
 
                                 utilizadores.Add(new Utilizador(id, email, nome, password, isClient));
                             }

@@ -25,7 +25,7 @@ namespace BMW.Data.Data
         // Verifica se um relatório existe na base de dados pelo ID
         public bool ContainsKey(int id)
         {
-            string query = "SELECT COUNT(*) FROM Relatorio WHERE Id = @Id";
+            string query = "SELECT COUNT(*) FROM Relatorio WHERE idRelatorio = @Id";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -48,7 +48,7 @@ namespace BMW.Data.Data
         // Obtém um relatório pelo ID
         public Relatorio? Get(int id)
         {
-            string query = "SELECT * FROM Relatorio WHERE Id = @Id";
+            string query = "SELECT * FROM Relatorio WHERE idRelatorio = @Id";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -62,11 +62,11 @@ namespace BMW.Data.Data
                             if (reader.Read())
                             {
                                 return new Relatorio(
-                                    reader.GetInt32(reader.GetOrdinal("Id")),
+                                    reader.GetInt32(reader.GetOrdinal("idRelatorio")),
                                     reader.GetInt32(reader.GetOrdinal("Tipo")),
                                     reader.GetDateTime(reader.GetOrdinal("DataGeracao")),
                                     reader.GetString(reader.GetOrdinal("Conteudo")),
-                                    reader.GetString(reader.GetOrdinal("IdFuncionario"))
+                                    reader.GetString(reader.GetOrdinal("idFuncionario"))
                                 );
                             }
                         }
@@ -84,8 +84,8 @@ namespace BMW.Data.Data
         public void Put(Relatorio relatorio)
         {
             string query = ContainsKey(relatorio.Id)
-                ? "UPDATE Relatorio SET Tipo = @Tipo, DataGeracao = @DataGeracao, Conteudo = @Conteudo, IdFuncionario = @IdFuncionario WHERE Id = @Id"
-                : "INSERT INTO Relatorio (Id, Tipo, DataGeracao, Conteudo, IdFuncionario) VALUES (@Id, @Tipo, @DataGeracao, @Conteudo, @IdFuncionario)";
+                ? "UPDATE Relatorio SET Tipo = @Tipo, DataGeracao = @DataGeracao, Conteudo = @Conteudo, idFuncionario = @IdFuncionario WHERE Id = @Id"
+                : "INSERT INTO Relatorio (idRelatorio, Tipo, DataGeracao, Conteudo, idFuncionario) VALUES (@Id, @Tipo, @DataGeracao, @Conteudo, @IdFuncionario)";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -111,7 +111,7 @@ namespace BMW.Data.Data
         // Remove um relatório pelo ID
         public void Remove(int id)
         {
-            string query = "DELETE FROM Relatorio WHERE Id = @Id";
+            string query = "DELETE FROM Relatorio WHERE idRelatorio = @Id";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -147,11 +147,11 @@ namespace BMW.Data.Data
                             while (reader.Read())
                             {
                                 var relatorio = new Relatorio(
-                                    reader.GetInt32(reader.GetOrdinal("Id")),
+                                    reader.GetInt32(reader.GetOrdinal("idRelatorio")),
                                     reader.GetInt32(reader.GetOrdinal("Tipo")),
                                     reader.GetDateTime(reader.GetOrdinal("DataGeracao")),
                                     reader.GetString(reader.GetOrdinal("Conteudo")),
-                                    reader.GetString(reader.GetOrdinal("IdFuncionario"))
+                                    reader.GetString(reader.GetOrdinal("idFuncionario"))
                                 );
                                 relatorios.Add(relatorio);
                             }

@@ -25,7 +25,7 @@ namespace BMW.Data.Data
         // Verifica se um alerta existe na base de dados pelo ID
         public bool ContainsKey(int idAlerta)
         {
-            string query = "SELECT COUNT(*) FROM Alerta WHERE IdAlerta = @IdAlerta";
+            string query = "SELECT COUNT(*) FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -48,7 +48,7 @@ namespace BMW.Data.Data
         // Obtém um alerta pelo ID
         public Alerta? Get(int idAlerta)
         {
-            string query = "SELECT * FROM Alerta WHERE IdAlerta = @IdAlerta";
+            string query = "SELECT * FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -62,7 +62,7 @@ namespace BMW.Data.Data
                             if (reader.Read())
                             {
                                 return new Alerta(
-                                    reader.GetInt32(reader.GetOrdinal("IdAlerta")),
+                                    reader.GetInt32(reader.GetOrdinal("idAlerta")),
                                     reader.GetInt32(reader.GetOrdinal("IdProgresso")),
                                     reader.GetString(reader.GetOrdinal("Mensagem")),
                                     reader.GetDateTime(reader.GetOrdinal("Data"))
@@ -83,8 +83,8 @@ namespace BMW.Data.Data
         public void Put(Alerta alerta)
         {
             string query = ContainsKey(alerta.IdAlerta)
-                ? "UPDATE Alerta SET IdProgresso = @IdProgresso, Mensagem = @Mensagem, Data = @Data WHERE IdAlerta = @IdAlerta"
-                : "INSERT INTO Alerta (IdAlerta, IdProgresso, Mensagem, Data) VALUES (@IdAlerta, @IdProgresso, @Mensagem, @Data)";
+                ? "UPDATE Alerta SET idProgresso = @IdProgresso, Mensagem = @Mensagem, Data = @Data WHERE idAlerta = @IdAlerta"
+                : "INSERT INTO Alerta (idAlerta, idProgresso, Mensagem, Data) VALUES (@IdAlerta, @IdProgresso, @Mensagem, @Data)";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -109,7 +109,7 @@ namespace BMW.Data.Data
         // Remove um alerta pelo ID
         public void Remove(int idAlerta)
         {
-            string query = "DELETE FROM Alerta WHERE IdAlerta = @IdAlerta";
+            string query = "DELETE FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -145,8 +145,8 @@ namespace BMW.Data.Data
                             while (reader.Read())
                             {
                                 var alerta = new Alerta(
-                                    reader.GetInt32(reader.GetOrdinal("IdAlerta")),
-                                    reader.GetInt32(reader.GetOrdinal("IdProgresso")),
+                                    reader.GetInt32(reader.GetOrdinal("idAlerta")),
+                                    reader.GetInt32(reader.GetOrdinal("idProgresso")),
                                     reader.GetString(reader.GetOrdinal("Mensagem")),
                                     reader.GetDateTime(reader.GetOrdinal("Data"))
                                 );

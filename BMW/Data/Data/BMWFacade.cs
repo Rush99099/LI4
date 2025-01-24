@@ -42,7 +42,7 @@ namespace BMW.Data.Data
             var utilizador = new Utilizador(0, email, nome, password, isCliente);
             _utilizadorDAO.Put(utilizador);
         }
-        /*
+        
         public Utilizador? LogIn(string email, string password)
         {
             var utilizador = _utilizadorDAO.GetByEmail(email);
@@ -52,60 +52,63 @@ namespace BMW.Data.Data
             }
             throw new Exception("Credenciais inválidas");
         }
-
+        
         // 2. Gestão de Encomendas
         public ICollection<Encomenda> GetListaEncomendas(int clienteId)
         {
-            return _encomendaDAO.GetByClienteId(clienteId);
+            return _encomendaDAO.GetByClienteID(clienteId);
         }
-
+        
         public void RegistarEncomenda(int clienteId, int veiculoId, string observacoes)
         {
             var encomenda = new Encomenda(0, DateTime.Now, observacoes, clienteId, veiculoId, 1); // Estado inicial
             _encomendaDAO.Put(encomenda);
         }
-
+        
         // 3. Gestão do Catálogo de Veículos
         public ICollection<Veiculo> GetCatalogo()
         {
             return _veiculoDAO.GetAll();
         }
-
+        
         public void AddVeiculo(string modelo, decimal precoBase, DateTime dataAdicao)
         {
             var veiculo = new Veiculo(0, modelo, (int)precoBase, dataAdicao);
             _veiculoDAO.Put(veiculo);
         }
-
+        
         public void DeleteVeiculo(int veiculoId)
         {
             _veiculoDAO.Remove(veiculoId);
         }
-
+        
         // 4. Gestão de Funcionários
         public ICollection<Funcionario> GetFuncionarios()
         {
             return _funcionarioDAO.GetAll();
         }
-
-        public void AddFuncionario(string nome, string email, DateTime dataContratacao, int posicaoId)
+        
+        public void AddFuncionario(string nome, string email, string password, DateTime dataContratacao, int posicaoId, int? supervisor)
         {
-            var funcionario = new Funcionario(0, nome, email, dataContratacao, posicaoId);
+            var utilizador = new Utilizador(email, nome, password, false);
+            var funcionario = new Funcionario(0, dataContratacao, posicaoId, supervisor);
+            _utilizadorDAO.Put(utilizador);
             _funcionarioDAO.Put(funcionario);
         }
-
+        
         public void DeleteFuncionario(int funcionarioId)
         {
             _funcionarioDAO.Remove(funcionarioId);
+            _utilizadorDAO.Remove(funcionarioId);
         }
 
         // 5. Gestão de Progresso
-        public void RegistarProgresso(int encomendaId, int faseId, DateTime dataInicio, DateTime? dataFim)
+        public void RegistarProgresso(int encomendaId, int faseId, DateTime dataInicio, DateTime? dataFim, int idFuncionario)
         {
-            var progresso = new Progresso(0, dataInicio, (dataFim.HasValue ? (int)(dataFim.Value - dataInicio).TotalMinutes : 0), "Progresso registado", faseId);
+            var progresso = new Progresso(encomendaId, faseId, dataInicio, dataFim, "Progresso registado", idFuncionario);
             _progressoDAO.Put(progresso);
         }
-
+        /*
         // 6. Gestão de Alertas
         public ICollection<Alerta> GetAlertas()
         {

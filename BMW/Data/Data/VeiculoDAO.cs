@@ -23,7 +23,7 @@ namespace BMW.Data.Data
         // Verifica se um veículo existe na base de dados pelo ID
         public bool ContainsKey(int id)
         {
-            string query = "SELECT COUNT(*) FROM Veiculo WHERE Id = @Id";
+            string query = "SELECT COUNT(*) FROM Veiculo WHERE idVeiculo = @Id";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -46,7 +46,7 @@ namespace BMW.Data.Data
         // Obtém um veículo pelo ID
         public Veiculo? Get(int id)
         {
-            string query = "SELECT * FROM Veiculo WHERE Id = @Id";
+            string query = "SELECT * FROM Veiculo WHERE idVeiculo = @Id";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -60,7 +60,7 @@ namespace BMW.Data.Data
                             if (reader.Read())
                             {
                                 return new Veiculo(
-                                    reader.GetInt32(reader.GetOrdinal("Id")),
+                                    reader.GetInt32(reader.GetOrdinal("idVeiculo")),
                                     reader.GetString(reader.GetOrdinal("Modelo")),
                                     reader.GetInt32(reader.GetOrdinal("PrecoBase")),
                                     reader.GetDateTime(reader.GetOrdinal("DataAdicao"))
@@ -81,8 +81,8 @@ namespace BMW.Data.Data
         public void Put(Veiculo veiculo)
         {
             string query = ContainsKey(veiculo.Id)
-                ? "UPDATE Veiculo SET Modelo = @Modelo, PrecoBase = @PrecoBase, DataAdicao = @DataAdicao WHERE Id = @Id"
-                : "INSERT INTO Veiculo (Id, Modelo, PrecoBase, DataAdicao) VALUES (@Id, @Modelo, @PrecoBase, @DataAdicao)";
+                ? "UPDATE Veiculo SET Modelo = @Modelo, PrecoBase = @PrecoBase, DataAdicao = @DataAdicao WHERE idVeiculo = @Id"
+                : "INSERT INTO Veiculo (idVeiculo, Modelo, PrecoBase, DataAdicao) VALUES (@Id, @Modelo, @PrecoBase, @DataAdicao)";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -107,7 +107,7 @@ namespace BMW.Data.Data
         // Remove um veículo pelo ID
         public void Remove(int id)
         {
-            string query = "DELETE FROM Veiculo WHERE Id = @Id";
+            string query = "DELETE FROM Veiculo WHERE idVeiculo = @Id";
             try
             {
                 using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
@@ -143,7 +143,7 @@ namespace BMW.Data.Data
                             while (reader.Read())
                             {
                                 var veiculo = new Veiculo(
-                                    reader.GetInt32(reader.GetOrdinal("Id")),
+                                    reader.GetInt32(reader.GetOrdinal("idVeiculo")),
                                     reader.GetString(reader.GetOrdinal("Modelo")),
                                     reader.GetInt32(reader.GetOrdinal("PrecoBase")),
                                     reader.GetDateTime(reader.GetOrdinal("DataAdicao"))

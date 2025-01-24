@@ -3,17 +3,20 @@ namespace BMW.Data.Models
     public class Progresso
     {
 // Propriedades
-        public int Id { get; set; } // Identificador único do progresso
-        public DateTime DataRegisto { get; set; } // Data de registo do progresso
-        public int TempoExecucao { get; set; } // Tempo de execução (em minutos)
+        public int IdEncomenda { get; set; } // Identificador único do progresso
+
+        public int IdFase { get; set; } // Identificador único do progresso
+        public DateTime StartFase { get; set; } // Data de registo do progresso
+        public DateTime? EndFase { get; set; } // Data do final do progresso (em minutos)
         public string Observacoes { get; set; } // Observações relacionadas ao progresso
         public int IdFuncionario { get; set; }
         // Construtor completo
-        public Progresso(int id, DateTime dataRegisto, int tempoExecucao, string observacoes, int idFuncionario)
+        public Progresso(int idEncomenda, int idFase, DateTime startFase, DateTime? endFase, string observacoes, int idFuncionario)
         {
-            Id = id;
-            DataRegisto = dataRegisto;
-            TempoExecucao = tempoExecucao;
+            IdEncomenda = idEncomenda;
+            IdFase = idFase;
+            StartFase = startFase;
+            EndFase = endFase;
             Observacoes = observacoes;
             IdFuncionario = idFuncionario;
         }
