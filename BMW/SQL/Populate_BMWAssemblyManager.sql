@@ -1,11 +1,11 @@
 -- Selecionar o esquema bmwassemblymanager
-USE bmwassemblymanager;
+USE assemblymngr;
 
 -- Povoar a tabela Utilizador
 INSERT INTO Utilizador (email, nome, Password, isCliente)
 VALUES
 ('joao.silva@email.com', 'João Silva', 'password123', 0),
-('ana.oliveira@email.com', 'Ana Oliveira', 'password123', 1),
+('ana.oliveira@email.com', 'Ana Oliveira', 'password123', 0),
 ('carlos.santos@email.com', 'Carlos Santos', 'password123', 1);
 
 -- Povoar a tabela Veiculo

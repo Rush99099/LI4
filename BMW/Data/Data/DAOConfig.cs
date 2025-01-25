@@ -5,10 +5,10 @@ namespace BMW.Data.Data
 {
     internal class DAOconfig
     {
-        public const string USER = "";
-        public const string PASSWORD = "";
-        public const string MACHINE = "";
-        public const string DATABASE = "";
+        public const string USER = "root";
+        public const string PASSWORD = "root";
+        public const string MACHINE = "localhost";
+        public const string DATABASE = "ASSEMBLYMNGR";
         
         public static string GetConnectionString()
         {

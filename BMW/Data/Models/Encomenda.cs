@@ -9,6 +9,10 @@ namespace BMW.Data.Models
         public int IdCliente { get; set; }
         public int IdVeiculo { get; set; }
         public int Estado { get; set; }
+        
+        //Construtor vazio
+        public Encomenda(){}
+        
         // Construtor padrão
         public Encomenda(int id, DateTime data, string? observacoes, int idCliente, int idVeiculo, int estado)
         {

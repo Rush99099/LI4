@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 namespace BMW.Data.Models
 {
     public class Funcionario
     {
+        [Key]
         public int IdFuncionario { get; set; }
         public DateTime ContractDate { get; set; }
         public int Posicao { get; set; }

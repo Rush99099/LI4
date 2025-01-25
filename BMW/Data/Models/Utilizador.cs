@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 namespace BMW.Data.Models
 {
     public class Utilizador
     {
+        [Key]
         public int IdUtilizador { get; set; }
         public string Email { get; set; }
         public string Nome { get; set; }

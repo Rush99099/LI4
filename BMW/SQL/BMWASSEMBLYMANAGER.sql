@@ -25,8 +25,7 @@ CREATE TABLE IF NOT EXISTS `ASSEMBLYMNGR`.`Utilizador` (
   `isCliente` TINYINT NOT NULL,
   PRIMARY KEY (`idUtilizador`),
   UNIQUE INDEX `idUtilizador_UNIQUE` (`idUtilizador` ASC) VISIBLE,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC) VISIBLE)
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 

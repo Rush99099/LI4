@@ -236,5 +236,62 @@ namespace BMW.Data.Data
             }
             return utilizadores;
         }
+
+        public List<Utilizador> ValuesClientes()
+        {
+            List<Utilizador> utilizadores = new List<Utilizador>();
+            string query = "SELECT * FROM Utilizador WHERE isCliente = 1";
+            try
+            {
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(reader.GetOrdinal("idUtilizador"));
+                                string email = reader.GetString(reader.GetOrdinal("email"));
+                                string nome = reader.GetString(reader.GetOrdinal("nome"));
+                                string password = reader.GetString(reader.GetOrdinal("Password"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
+
+                                utilizadores.Add(new Utilizador(id, email, nome, password, isClient));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DAOException("Erro no ValuesClientes do UtilizadorDAO", ex);
+            }
+            return utilizadores;
+        }
+
+        public void ChangePassword(int id, string password)
+        {
+            string query;
+            query = "UPDATE Utilizador SET Password = @password WHERE idUtilizador = @IdUtilizador";
+            try
+            {
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@IdUtilizador", id);
+                        cmd.Parameters.AddWithValue("@password", password);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new DAOException("Erro no ChangePassword do UtilizadorDAO");
+            }
+        }
     }
 }

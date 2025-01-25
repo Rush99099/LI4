@@ -52,6 +52,14 @@ namespace BMW.Data.Data
             }
             throw new Exception("Credenciais inválidas");
         }
+
+        public void ChangePassword(int id, string password){
+            _utilizadorDAO.ChangePassword(id, password);
+        }
+        
+        public List<Utilizador> GetClientes(){
+            return _utilizadorDAO.ValuesClientes();
+        }
         
         // 2. Gestão de Encomendas
         public ICollection<Encomenda> GetListaEncomendas(int clienteId)
