@@ -45,9 +45,13 @@ namespace BMW.Data.Data
         
         public Utilizador? LogIn(string email, string password)
         {
+            string test = "test";
+            Console.WriteLine("{0} {1} {2}", email, password, test);
             var utilizador = _utilizadorDAO.GetByEmail(email);
+            
             if (utilizador != null && utilizador.Password == password)
             {
+                Console.WriteLine("Valid user");
                 return utilizador;
             }
             throw new Exception("Credenciais inválidas");

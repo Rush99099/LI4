@@ -1,26 +1,111 @@
 @page "/login"
+@using BMW.Data.Data
+@using BMW.Data.Models
 
 <PageTitle>Login</PageTitle>
 
-<div class="container" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #121212; color: white;">
-    <div class="content" style="text-align: center; width: 100%; max-width: 400px;">
+<div class="container">
+    <div class="content">
         <div class="logo">
-            <img src="images/bmw-logo.png" alt="BMW Logo" style="width: 250px; height: auto;" />
+            <img src="images/bmw-logo.png" alt="BMW Logo" />
         </div>
-        <div class="title" style="margin-top: 0px;">
-            <h1 style="margin: 0; font-size: 2.5rem;">BMW</h1>
-            <h2 style="margin: 0; color: #cccccc; font-size: 1.2rem;">Assembly Manager</h2>
+        <div class="title">
+            <h1>BMW</h1>
+            <h2>Assembly Manager</h2>
         </div>
-        <div class="form" style="margin-top: 40px;">
-            <input type="email" placeholder="Enter your email" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
-            <input type="password" placeholder="Enter your password" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 20px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
-            <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 16px; background-color: #007bff; border: none; border-radius: 5px; color: white;" @onclick="HandleLogin">Login</button>
+        <div class="form">
+            <input type="email" placeholder="Enter your email" class="form-input" @bind="email" />
+            <input type="password" placeholder="Enter your password" class="form-input" @bind="password" />
+            <NavLink class="btn btn-primary" href="@GetRedirectUrl()">Login</NavLink>
         </div>
     </div>
 </div>
 
 @code {
-        private void HandleLogin()
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string GetRedirectUrl()
     {
+        try
+        {
+            var user = BMWFacade.GetInstance().LogIn(email, password);
+            if (user != null)
+            {
+                return user.IsCliente ? "/home" : "/funcionario";
+            }
+            Console.WriteLine("Credenciais inválidas.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro durante o login: {ex.Message}");
+        }
+        return "/login"; // Caso falhe, permanece na página de login
     }
 }
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #121212;
+        color: white;
+    }
+
+    .content {
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .logo img {
+        width: 250px;
+        height: auto;
+    }
+
+    .title h1 {
+        margin: 0;
+        font-size: 2.5rem;
+    }
+
+    .title h2 {
+        margin: 0;
+        color: #cccccc;
+        font-size: 1.2rem;
+    }
+
+    .form {
+        margin-top: 40px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #d4d4d4;
+        color: black;
+        font-size: 16px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>

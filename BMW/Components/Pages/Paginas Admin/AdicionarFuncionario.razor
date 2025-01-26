@@ -1,0 +1,115 @@
+@page "/admin/gestor-funcionarios/adicionar-funcionario"
+
+<PageTitle>Adicionar Funcionário</PageTitle>
+
+<TableLayout 
+    UserName="Diogo Fernandes"
+    UserRole="Admin"
+    Button1Text="Gestão de Funcionários"
+    Button1Href="/admin/gestor-funcionarios"
+    Button1Icon="👥"
+    Button2Text="Gestão de Veículos"
+    Button2Href="/admin/gestor-veiculos"
+    Button2Icon="🚗"
+    Title="">
+
+    <div class="form-container">
+        <h3>Adicionar Funcionário</h3>
+        <form>
+            <div>
+                <label>Nome:</label>
+                <input type="text" class="form-input" @bind="novoFuncionario.Nome" placeholder="Digite o nome" />
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="email" class="form-input" @bind="novoFuncionario.Email" placeholder="Digite o email" />
+            </div>
+            <div>
+                <label>Password:</label>
+                <input type="password" class="form-input" @bind="novoFuncionario.Password" placeholder="Digite a senha" />
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-success" @onclick="SalvarFuncionario">Salvar</button>
+                <NavLink class="btn btn-secondary" href="/admin/gestor-funcionarios">Cancelar</NavLink>
+            </div>
+        </form>
+    </div>
+</TableLayout>
+
+@code {
+    private Funcionario novoFuncionario = new Funcionario();
+
+    private void SalvarFuncionario()
+    {
+        // Implementar lógica para adicionar funcionário
+        Console.WriteLine($"Adicionado: {novoFuncionario.Nome}, {novoFuncionario.Email}");
+    }
+
+    private class Funcionario
+    {
+        public string Nome { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}
+
+<style>
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        max-width: 400px;
+        margin: auto;
+        color: black;
+        margin-top: 50px;
+    }
+
+    .form-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: black;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        color: black;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-success {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>

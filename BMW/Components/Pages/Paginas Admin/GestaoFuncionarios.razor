@@ -19,7 +19,7 @@
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Email</th>
-                <th>Data de Contratação</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -27,34 +27,43 @@
                 <td>001</td>
                 <td>João Silva</td>
                 <td>joao.silva@bmwmanager.com</td>
-                <td>15-01-2023</td>
+                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(1)">Remover</button></td>
             </tr>
             <tr>
                 <td>002</td>
                 <td>Maria Oliveira</td>
                 <td>maria.oliveira@bmwmanager.com</td>
-                <td>10-07-2022</td>
+                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(2)">Remover</button></td>
             </tr>
             <tr>
                 <td>003</td>
                 <td>Pedro Almeida</td>
                 <td>pedro.almeida@bmwmanager.com</td>
-                <td>05-03-2023</td>
+                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(3)">Remover</button></td>
             </tr>
             <tr>
                 <td>004</td>
                 <td>Ana Santos</td>
                 <td>ana.santos@bmwmanager.com</td>
-                <td>01-12-2022</td>
+                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(4)">Remover</button></td>
             </tr>
         </tbody>
     </table>
 
     <div class="actions">
-        <button class="btn btn-primary">Adicionar Funcionário</button>
-        <button class="btn btn-primary">Remover Funcionário</button>
+        <NavLink class="btn btn-primary" href="/admin/gestor-funcionarios/adicionar-funcionario">
+            Adicionar Funcionário
+        </NavLink>
     </div>
 </TableLayout>
+
+@code {
+    private void RemoverFuncionario(int id)
+    {
+        // Implementar lógica para remover funcionário por ID
+        Console.WriteLine($"Removendo funcionário com ID: {id}");
+    }
+}
 
 <style>
     .table {
@@ -88,6 +97,14 @@
         transition: background-color 0.3s;
     }
 
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #a71d2a;
+    }
+
     .btn:hover {
         background-color: #0056b3;
     }
@@ -95,7 +112,6 @@
     .actions {
         display: flex;
         justify-content: center;
-        gap: 20px;
         margin-top: 20px;
     }
 </style>

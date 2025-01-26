@@ -18,8 +18,7 @@
             <tr>
                 <th>ID</th>
                 <th>Modelo</th>
-                <th>Categoria</th>
-                <th>Estado</th>
+                <th>Preço Base</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -27,31 +26,36 @@
             <tr>
                 <td>001</td>
                 <td>BMW i7</td>
-                <td>Elétrico</td>
-                <td>Disponível</td>
-                <td><button class="btn btn-danger">Remover</button></td>
+                <td>75.000€</td>
+                <td><button class="btn btn-danger" @onclick="() => RemoverVeiculo(1)">Remover</button></td>
             </tr>
             <tr>
                 <td>002</td>
                 <td>BMW X6</td>
-                <td>SUV</td>
-                <td>Em Produção</td>
-                <td><button class="btn btn-danger">Remover</button></td>
+                <td>60.000€</td>
+                <td><button class="btn btn-danger" @onclick="() => RemoverVeiculo(2)">Remover</button></td>
             </tr>
             <tr>
                 <td>003</td>
                 <td>BMW M4 Coupé</td>
-                <td>Desportivo</td>
-                <td>Indisponível</td>
-                <td><button class="btn btn-danger">Remover</button></td>
+                <td>85.000€</td>
+                <td><button class="btn btn-danger" @onclick="() => RemoverVeiculo(3)">Remover</button></td>
             </tr>
         </tbody>
     </table>
 
     <div class="actions">
-        <button class="btn btn-primary">Adicionar Veículo</button>
+        <NavLink class="btn btn-primary" href="/admin/gestor-veiculos/adicionar-veiculo">Adicionar Veículo</NavLink>
     </div>
 </TableLayout>
+
+@code {
+    private void RemoverVeiculo(int id)
+    {
+        // Implementar lógica para remover veículo por ID
+        Console.WriteLine($"Removendo veículo com ID: {id}");
+    }
+}
 
 <style>
     .table {
@@ -90,18 +94,11 @@
     }
 
     .btn-danger {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+        background-color: #dc3545;
     }
 
     .btn-danger:hover {
-        background-color: #0056b3;
+        background-color: #bd2130;
     }
 
     .actions {

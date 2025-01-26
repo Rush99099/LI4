@@ -1,0 +1,46 @@
+@page "/funcionario/gestor-encomendas/acompanhar/registar-alerta/{id:int}"
+
+<PageTitle>Registar Alerta</PageTitle>
+
+<TableLayout 
+    UserName="Diogo Fernandes"
+    UserRole="Funcionário"
+    Button1Text="Gestão de Encomendas"
+    Button1Href="/funcionario/gestor-encomendas"
+    Button1Icon="📦"
+    Button2Text="Relatórios"
+    Button2Href="/funcionario/relatorios"
+    Button2Icon="📄"
+    Title="Registar Alerta">
+
+    <div class="form-container">
+        <h3>Registar Alerta</h3>
+        <form>
+            <div>
+                <label>Mensagem:</label>
+                <textarea class="form-input" @bind="alerta.Mensagem" placeholder="Digite a mensagem do alerta"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-success" @onclick="SalvarAlerta">Salvar</button>
+                <NavLink class="btn btn-secondary" href="@($"/funcionario/gestor-encomendas/acompanhar/{Id}")">Cancelar</NavLink>
+            </div>
+        </form>
+    </div>
+</TableLayout>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Alerta alerta = new();
+
+    private void SalvarAlerta()
+    {
+        Console.WriteLine($"Alerta salvo para encomenda #{Id}: {alerta.Mensagem}");
+    }
+
+    private class Alerta
+    {
+        public string Mensagem { get; set; } = string.Empty;
+    }
+}

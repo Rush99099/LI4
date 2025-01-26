@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using BMW.Data.Models;
+using MySql.Data.MySqlClient;
 
 namespace BMW.Data.Data
 {
@@ -113,16 +114,16 @@ namespace BMW.Data.Data
         public Utilizador? GetByEmail(string email)
         {
             Utilizador? utilizador = null;
-            string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Email";
+            string query = "SELECT * FROM utilizador WHERE email = @Email";
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection("Server=localhost;Port=3307;Database=ASSEMBLYMNGR;Uid=root;Pwd=root;"))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@Email", email);
                         con.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -138,9 +139,10 @@ namespace BMW.Data.Data
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DAOException("Erro no Get do UtilizadorDAO");
+                Console.WriteLine(ex.Message);
+                throw new DAOException("Erro no GetByEmail do UtilizadorDAO", ex);
             }
             return utilizador;
         }
@@ -150,6 +152,7 @@ namespace BMW.Data.Data
             string query;
             if (ContainsEmail(value.Email))
             {
+                Console.WriteLine("Test");
                 query = "UPDATE Utilizador SET email = @Email, nome = @Nome, Password = @Password, isClient = @IsClient WHERE email = @Email";
             }
             else
@@ -166,15 +169,15 @@ namespace BMW.Data.Data
                         cmd.Parameters.AddWithValue("@Email", value.Email);
                         cmd.Parameters.AddWithValue("@Nome", value.Nome);
                         cmd.Parameters.AddWithValue("@Password", value.Password);
-                        cmd.Parameters.AddWithValue("@IsClient", value.IsClient);
+                        cmd.Parameters.AddWithValue("@IsClient", value.IsCliente);
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DAOException("Erro no Put do UtilizadorDAO");
+                throw new DAOException("Erro no Put do UtilizadorDAO", ex);
             }
         }
 

@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 
 namespace BMW.Data.Data
@@ -12,12 +13,11 @@ namespace BMW.Data.Data
         
         public static string GetConnectionString()
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = MACHINE;
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
+            builder.Server = MACHINE;
             builder.UserID = USER;
             builder.Password = PASSWORD;
-            builder.InitialCatalog = DATABASE;
-            builder.TrustServerCertificate = true;
+            builder.Database = DATABASE;
             return builder.ConnectionString;
         }
     }

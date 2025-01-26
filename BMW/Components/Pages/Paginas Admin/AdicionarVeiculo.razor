@@ -1,0 +1,109 @@
+@page "/admin/gestor-veiculos/adicionar-veiculo"
+
+<PageTitle>Adicionar Veículo</PageTitle>
+
+<TableLayout 
+    UserName="Diogo Fernandes"
+    UserRole="Admin"
+    Button1Text="Gestão de Funcionários"
+    Button1Href="/admin/gestor-funcionarios"
+    Button1Icon="👥"
+    Button2Text="Gestão de Veículos"
+    Button2Href="/admin/gestor-veiculos"
+    Button2Icon="🚗"
+    Title="Adicionar Veículo">
+
+    <div class="form-container">
+        <h3>Adicionar Veículo</h3>
+        <form>
+            <div>
+                <label>Modelo:</label>
+                <input type="text" class="form-input" @bind="novoVeiculo.Modelo" placeholder="Digite o modelo" />
+            </div>
+            <div>
+                <label>Preço Base:</label>
+                <input type="number" class="form-input" @bind="novoVeiculo.PrecoBase" placeholder="Digite o preço base" />
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-success" @onclick="SalvarVeiculo">Salvar</button>
+                <NavLink class="btn btn-secondary" href="/admin/gestor-veiculos">Cancelar</NavLink>
+            </div>
+        </form>
+    </div>
+</TableLayout>
+
+@code {
+    private Veiculo novoVeiculo = new Veiculo();
+
+    private void SalvarVeiculo()
+    {
+        // Implementar lógica para adicionar veículo
+        Console.WriteLine($"Adicionado: {novoVeiculo.Modelo}, {novoVeiculo.PrecoBase}€");
+    }
+
+    private class Veiculo
+    {
+        public string Modelo { get; set; } = string.Empty;
+        public decimal PrecoBase { get; set; }
+    }
+}
+
+<style>
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        max-width: 400px;
+        margin: 20px auto;
+        color: black;
+    }
+
+    .form-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: black;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        color: black;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-success {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>

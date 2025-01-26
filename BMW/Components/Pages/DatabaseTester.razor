@@ -1,6 +1,5 @@
 @page "/DatabaseTester"
 @using BMW.Data.Models
-@using BMW.Data.Data;
 @inject BMW.Data.ApplicationDbContext DbContext
 @using Microsoft.EntityFrameworkCore
 
@@ -39,8 +38,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         // Carrega apenas os utilizadores que são clientes
-        Clientes = BMWFacade.GetInstance().GetClientes();
-        //Clientes = await DbContext.Utilizador.Where(u => u.IsClient).ToListAsync();
+        Clientes = await DbContext.Utilizador.Where(u => u.IsCliente).ToListAsync();
     }
 }
-

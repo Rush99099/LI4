@@ -2,39 +2,113 @@
 @using BMW.Data.Data
 @using BMW.Data.Models
 
-
 <PageTitle>Register</PageTitle>
 
-<div class="container" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #121212; color: white;">
-    <div class="content" style="text-align: center; width: 100%; max-width: 400px;">
+<div class="container">
+    <div class="content">
         <div class="logo">
-            <img src="images/bmw-logo.png" alt="BMW Logo" style="width: 250px; height: auto;" />
+            <img src="images/bmw-logo.png" alt="BMW Logo" />
         </div>
-        <div class="title" style="margin-top: 0px;">
-            <h1 style="margin: 0; font-size: 2.5rem;">BMW</h1>
-            <h2 style="margin: 0; color: #cccccc; font-size: 1.2rem;">Assembly Manager</h2>
+        <div class="title">
+            <h1>BMW</h1>
+            <h2>Assembly Manager</h2>
         </div>
-        <div class="form" style="margin-top: 40px;">
-            <input type="text" @bind="utilizador.Nome" placeholder="Enter your name" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
-            <input type="email" @bind="utilizador.Email" placeholder="Enter your email" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
-            <input type="password" @bind="utilizador.Password" placeholder="Enter your password" class="form-input" style="width: 100%; padding: 12px; margin-bottom: 20px; border: none; border-radius: 5px; background-color: #d4d4d4; color: white; font-size: 16px;" />
-            <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 16px; background-color: #007bff; border: none; border-radius: 5px; color: white;" @onclick="HandleRegister">Register</button>
+        <div class="form">
+            <input type="text" @bind="utilizador.Nome" placeholder="Enter your name" class="form-input" />
+            <input type="email" @bind="utilizador.Email" placeholder="Enter your email" class="form-input" />
+            <input type="password" @bind="utilizador.Password" placeholder="Enter your password" class="form-input" />
+            <NavLink href="/login" class="btn btn-primary" @onclick="HandleRegister">Register</NavLink>
         </div>
     </div>
 </div>
 
 @code {
     private Utilizador utilizador = new Utilizador();
+
     private void HandleRegister()
     {
-        // Lógica de registo pode ser adicionada aqui
-        Console.WriteLine("Register clicked!");
-        // Validaçao basica
+        Console.WriteLine("Teste.");
         if (string.IsNullOrEmpty(utilizador.Nome) || string.IsNullOrEmpty(utilizador.Email) || string.IsNullOrEmpty(utilizador.Password))
         {
-            Console.WriteLine("Todos os campos não estão preenchidos");
+            Console.WriteLine("All fields are required.");
             return;
         }
-        BMWFacade.GetInstance().Registar(utilizador.Email, utilizador.Password, utilizador.Nome, true);
+        try
+        {
+            utilizador.IsCliente = true;
+            BMWFacade.GetInstance().Registar(utilizador.Email, utilizador.Password, utilizador.Nome, true);
+
+            Console.WriteLine("Registration successful.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during registration: {ex.Message}");
+        }
     }
 }
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #121212;
+        color: white;
+    }
+
+    .content {
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .logo img {
+        width: 250px;
+        height: auto;
+    }
+
+    .title h1 {
+        margin: 0;
+        font-size: 2.5rem;
+    }
+
+    .title h2 {
+        margin: 0;
+        color: #cccccc;
+        font-size: 1.2rem;
+    }
+
+    .form {
+        margin-top: 40px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #d4d4d4;
+        color: black;
+        font-size: 16px;
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>

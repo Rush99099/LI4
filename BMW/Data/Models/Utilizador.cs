@@ -8,14 +8,14 @@ namespace BMW.Data.Models
         public string Email { get; set; }
         public string Nome { get; set; }
         public string Password { get; set; }
-        public bool IsClient { get; set; }
+        public bool IsCliente { get; set; }
 
         public Utilizador()
         {
             Email = String.Empty;
             Nome = String.Empty;
             Password = String.Empty;
-            IsClient = true;
+            IsCliente = true;
         }
         // Construtor parametrizado
         public Utilizador(string email, string nome, string password, bool isClient)
@@ -23,7 +23,7 @@ namespace BMW.Data.Models
             Email = email;
             Nome = nome;
             Password = password;
-            IsClient = isClient;
+            IsCliente = isClient;
         }
         public Utilizador(int id, string email, string nome, string password, bool isClient)
         {
@@ -31,7 +31,7 @@ namespace BMW.Data.Models
             Email = email;
             Nome = nome;
             Password = password;
-            IsClient = isClient;
+            IsCliente = isClient;
         }
     }
 

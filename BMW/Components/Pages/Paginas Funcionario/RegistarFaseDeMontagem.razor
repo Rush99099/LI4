@@ -1,0 +1,46 @@
+@page "/funcionario/gestor-encomendas/acompanhar/registar-fase/{id:int}"
+
+<PageTitle>Registar Fase de Montagem</PageTitle>
+
+<TableLayout 
+    UserName="Diogo Fernandes"
+    UserRole="Funcionário"
+    Button1Text="Gestão de Encomendas"
+    Button1Href="/funcionario/gestor-encomendas"
+    Button1Icon="📦"
+    Button2Text="Relatórios"
+    Button2Href="/funcionario/relatorios"
+    Button2Icon="📄"
+    Title="Registar Fase de Montagem">
+
+    <div class="form-container">
+        <h3>Registar Fase de Montagem</h3>
+        <form>
+            <div>
+                <label>Descrição da Fase:</label>
+                <textarea class="form-input" @bind="fase.Descricao" placeholder="Digite a descrição"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-success" @onclick="SalvarFase">Salvar</button>
+                <NavLink class="btn btn-secondary" href="@($"/funcionario/gestor-encomendas/acompanhar/{Id}")">Cancelar</NavLink>
+            </div>
+        </form>
+    </div>
+</TableLayout>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private FaseDeMontagem fase = new();
+
+    private void SalvarFase()
+    {
+        Console.WriteLine($"Fase salva para encomenda #{Id}: {fase.Descricao}");
+    }
+
+    private class FaseDeMontagem
+    {
+        public string Descricao { get; set; } = string.Empty;
+    }
+}
