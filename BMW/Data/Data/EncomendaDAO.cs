@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using BMW.Data.Models;
+using MySql.Data.MySqlClient;
 
 namespace BMW.Data.Data
 {
@@ -28,9 +29,9 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Encomenda WHERE Id = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
@@ -51,13 +52,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Encomenda WHERE Id = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -89,9 +90,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Encomenda (idEncomenda, DataRegisto, Observacoes, idCliente, idVeiculo, Estado) VALUES (@Id, @DataRegisto, @Observacoes, @IdCliente, @IdVeiculo, @Estado)";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", encomenda.Id);
                         command.Parameters.AddWithValue("@DataRegisto", encomenda.DataRegisto);
@@ -116,9 +117,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Encomenda WHERE Id = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
@@ -139,12 +140,12 @@ namespace BMW.Data.Data
             var encomendas = new List<Encomenda>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -175,13 +176,13 @@ namespace BMW.Data.Data
             var encomendas = new List<Encomenda>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

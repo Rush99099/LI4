@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using BMW.Data.Models;
+using MySql.Data.MySqlClient;
 
 namespace BMW.Data.Data
 {
@@ -28,9 +29,9 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Progresso WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", idEncomenda);
                         command.Parameters.AddWithValue("@IdFase", idFase);
@@ -52,14 +53,14 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Progresso WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", idEncomenda);
                         command.Parameters.AddWithValue("@IdFase", idFase);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -91,9 +92,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Progresso (idEncomenda, StartFase, EndFase, Observacoes, idFuncionario) VALUES (@Id, @StartFase, @EndFase, @Observacoes, @IdFuncionario)";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", progresso.IdEncomenda);
                         command.Parameters.AddWithValue("@IdFase", progresso.IdFase);
@@ -118,9 +119,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Progresso WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", idEncomenda);
                         command.Parameters.AddWithValue("@IdFase", idFase);
@@ -142,12 +143,12 @@ namespace BMW.Data.Data
             var progressos = new List<Progresso>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

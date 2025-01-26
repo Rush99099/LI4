@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using BMW.Data.Models;
+using MySql.Data.MySqlClient;
 
 namespace BMW.Data.Data
 {
@@ -28,9 +29,9 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Relatorio WHERE idRelatorio = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
@@ -51,13 +52,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Relatorio WHERE idRelatorio = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -88,9 +89,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Relatorio (idRelatorio, Tipo, DataGeracao, Conteudo, idFuncionario) VALUES (@Id, @Tipo, @DataGeracao, @Conteudo, @IdFuncionario)";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", relatorio.Id);
                         command.Parameters.AddWithValue("@Tipo", relatorio.Tipo);
@@ -114,9 +115,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Relatorio WHERE idRelatorio = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
@@ -137,12 +138,12 @@ namespace BMW.Data.Data
             var relatorios = new List<Relatorio>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

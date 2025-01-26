@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using BMW.Data.Models;
+using MySql.Data.MySqlClient;
 
 namespace BMW.Data.Data
 {
@@ -28,9 +29,9 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", idAlerta);
                         connection.Open();
@@ -51,13 +52,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", idAlerta);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -87,9 +88,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Alerta (idAlerta, idProgresso, Mensagem, Data) VALUES (@IdAlerta, @IdProgresso, @Mensagem, @Data)";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", alerta.IdAlerta);
                         command.Parameters.AddWithValue("@IdProgresso", alerta.IdProgresso);
@@ -112,9 +113,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", idAlerta);
                         connection.Open();
@@ -135,12 +136,12 @@ namespace BMW.Data.Data
             var alertas = new List<Alerta>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

@@ -1,6 +1,7 @@
 @page "/login"
 @using BMW.Data.Data
 @using BMW.Data.Models
+@using Microsoft.AspNetCore.Mvc
 
 <PageTitle>Login</PageTitle>
 
@@ -24,6 +25,7 @@
 @code {
     private string email = string.Empty;
     private string password = string.Empty;
+    
     private string GetRedirectUrl()
     {
         try
@@ -31,7 +33,16 @@
             var user = BMWFacade.GetInstance().LogIn(email, password);
             if (user != null)
             {
-                return user.IsCliente ? "/home" : "/funcionario";
+                string destination = string.Empty;
+                if (user.IsCliente)
+                {
+                    destination = $"/home?id={user.IdUtilizador}";
+                }
+                else
+                {
+                    destination = $"/funcionario?id={user.IdUtilizador}";
+                }
+                return destination;
             }
             Console.WriteLine("Credenciais inválidas.");
         }
@@ -39,7 +50,7 @@
         {
             Console.WriteLine($"Erro durante o login: {ex.Message}");
         }
-        return "/login"; // Caso falhe, permanece na página de login
+        return "/login";
     }
 }
 
@@ -70,7 +81,9 @@
     }
 
     .title h2 {
+    using Microsoft.AspNetCore.Mvc;
         margin: 0;
+    using Microsoft.AspNetCore.Mvc;
         color: #cccccc;
         font-size: 1.2rem;
     }

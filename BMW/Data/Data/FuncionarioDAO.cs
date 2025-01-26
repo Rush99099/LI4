@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using BMW.Data.Models;
+using MySql.Data.MySqlClient;
 
 namespace BMW.Data.Data
 {
@@ -28,9 +29,9 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdFuncionario", idFuncionario);
                         connection.Open();
@@ -51,13 +52,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdFuncionario", idFuncionario);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -90,9 +91,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Funcionario (idFuncionario, ContractDate, Posicao, supervisor) VALUES (@IdFuncionario, @ContractDate, @Posicao, @Supervisor)";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdFuncionario", funcionario.IdFuncionario);
                         command.Parameters.AddWithValue("@ContractDate", funcionario.ContractDate);
@@ -115,9 +116,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdFuncionario", idFuncionario);
                         connection.Open();
@@ -138,12 +139,12 @@ namespace BMW.Data.Data
             var funcionarios = new List<Funcionario>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

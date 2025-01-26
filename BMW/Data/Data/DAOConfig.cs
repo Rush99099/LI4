@@ -18,6 +18,7 @@ namespace BMW.Data.Data
             builder.UserID = USER;
             builder.Password = PASSWORD;
             builder.Database = DATABASE;
+            builder.Port = 3307;
             return builder.ConnectionString;
         }
     }

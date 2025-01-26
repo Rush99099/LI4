@@ -25,13 +25,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE email = @email";
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@email", email);
                         con.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -54,13 +54,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Key";
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@Key", key);
                         con.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -83,13 +83,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Key";
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@Key", key);
                         con.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -97,7 +97,7 @@ namespace BMW.Data.Data
                                 string email = reader.GetString(reader.GetOrdinal("email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
 
                                 utilizador = new Utilizador(id, email, nome, password, isClient);
                             }
@@ -117,7 +117,7 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM utilizador WHERE email = @Email";
             try
             {
-                using (MySqlConnection con = new MySqlConnection("Server=localhost;Port=3307;Database=ASSEMBLYMNGR;Uid=root;Pwd=root;"))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
                     using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
@@ -131,7 +131,7 @@ namespace BMW.Data.Data
                                 //string email = reader.GetString(reader.GetOrdinal("Email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
 
                                 utilizador = new Utilizador(id, email, nome, password, isClient);
                             }
@@ -153,17 +153,17 @@ namespace BMW.Data.Data
             if (ContainsEmail(value.Email))
             {
                 Console.WriteLine("Test");
-                query = "UPDATE Utilizador SET email = @Email, nome = @Nome, Password = @Password, isClient = @IsClient WHERE email = @Email";
+                query = "UPDATE Utilizador SET email = @Email, nome = @Nome, Password = @Password, isCliente = @IsClient WHERE email = @Email";
             }
             else
             {
-                query = "INSERT INTO Utilizador (email, nome, Password, isClient) VALUES (@Email, @Nome, @Password, @IsClient)";
+                query = "INSERT INTO Utilizador (email, nome, Password, isCliente) VALUES (@Email, @Nome, @Password, @IsClient)";
             }
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         //cmd.Parameters.AddWithValue("@Key", key);
                         cmd.Parameters.AddWithValue("@Email", value.Email);
@@ -189,9 +189,9 @@ namespace BMW.Data.Data
                 string query = "DELETE FROM Utilizador WHERE idUtilizador = @Key";
                 try
                 {
-                    using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                    using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                     {
-                        using (SqlCommand cmd = new SqlCommand(query, con))
+                        using (MySqlCommand cmd = new MySqlCommand(query, con))
                         {
                             cmd.Parameters.AddWithValue("@Key", key);
                             con.Open();
@@ -212,12 +212,12 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador";
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         con.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -225,7 +225,7 @@ namespace BMW.Data.Data
                                 string email = reader.GetString(reader.GetOrdinal("email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
 
                                 utilizadores.Add(new Utilizador(id, email, nome, password, isClient));
                             }
@@ -246,12 +246,12 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE isCliente = 1";
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         con.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -259,7 +259,7 @@ namespace BMW.Data.Data
                                 string email = reader.GetString(reader.GetOrdinal("email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isClient"));
+                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
 
                                 utilizadores.Add(new Utilizador(id, email, nome, password, isClient));
                             }
@@ -280,9 +280,9 @@ namespace BMW.Data.Data
             query = "UPDATE Utilizador SET Password = @password WHERE idUtilizador = @IdUtilizador";
             try
             {
-                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
+                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (MySqlCommand cmd = new MySqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@IdUtilizador", id);
                         cmd.Parameters.AddWithValue("@password", password);
