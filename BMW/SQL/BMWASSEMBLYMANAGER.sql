@@ -84,9 +84,9 @@ ENGINE = InnoDB;
 -- Table `ASSEMBLYMNGR`.`Encomenda`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ASSEMBLYMNGR`.`Encomenda` (
-  `idEncomenda` INT NOT NULL,
+  `idEncomenda` INT NOT NULL AUTO_INCREMENT,
   `DataRegisto` DATETIME NOT NULL,
-  `Observações` VARCHAR(45) NULL,
+  `Observacoes` VARCHAR(45) NULL,
   `idCliente` INT NOT NULL,
   `idVeiculo` INT NOT NULL,
   `Estado` INT NOT NULL,

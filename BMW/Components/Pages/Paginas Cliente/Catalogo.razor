@@ -1,4 +1,7 @@
 @page "/catalogo"
+@using BMW.Data.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
 
 <PageTitle>Catálogo</PageTitle>
 
@@ -14,58 +17,68 @@
     Title="Catálogo de Veículos BMW">
 
     <div class="catalog-container">
-        @foreach (var modelo in ModelosBMW)
+        @if (veiculos == null || !veiculos.Any())
         {
-            <div class="catalog-item">
-                <img src="@modelo.Imagem" alt="@modelo.Nome" class="car-image" />
-                <h3 class="car-name">@modelo.Nome</h3>
-                <p><strong>Preço: </strong>@modelo.Preco €</p>
-                <button class="btn-encomendar" @onclick="() => Encomendar(modelo.Nome)">Encomendar</button>
-            </div>
+            <p>Não há veículos disponíveis no momento.</p>
+        }
+        else
+        {
+            @foreach (var veiculo in veiculos)
+            {
+                <div class="catalog-item">
+                    <h3 class="car-name">@veiculo.Modelo</h3>
+                    <p><strong>Preço: </strong>@string.Format("{0:C}", veiculo.PrecoBase)</p>
+                    <button class="btn-encomendar" @onclick="() => Encomendar(veiculo.Id)">Encomendar</button>
+                </div>
+            }
         }
     </div>
 </TableLayout>
 
 @code {
-    private List<ModeloBMW> ModelosBMW = new List<ModeloBMW>
-    {
-        new ModeloBMW
-        {
-            Nome = "BMW Série 3",
-            Preco = 45000,
-            Imagem = "images/bmw-serie3.jpg"
-        },
-        new ModeloBMW
-        {
-            Nome = "BMW X5",
-            Preco = 75000,
-            Imagem = "images/bmw-x5.jpg"
-        },
-        new ModeloBMW
-        {
-            Nome = "BMW i7",
-            Preco = 120000,
-            Imagem = "images/bmw-i7.jpg"
-        },
-        new ModeloBMW
-        {
-            Nome = "BMW Z4",
-            Preco = 60000,
-            Imagem = "images/bmw-z4.jpg"
-        }
-    };
+    private List<VeiculoCatalogo> veiculos = new();
+    private int clienteId = 1; // Substituir pelo ID do cliente autenticado
 
-    private void Encomendar(string modelo)
+    protected override void OnInitialized()
     {
-        // Lógica para encomendar o modelo de veículo.
-        Console.WriteLine($"Modelo encomendado: {modelo}");
+        try
+        {
+            // Obter veículos do BMWFacade
+            veiculos = BMWFacade.GetInstance().GetCatalogo()
+                                .Select(v => new VeiculoCatalogo
+                                {
+                                    Id = v.Id,
+                                    Modelo = v.Modelo,
+                                    PrecoBase = v.PrecoBase
+                                })
+                                .ToList();
+            Console.WriteLine("Catálogo carregado com sucesso.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar o catálogo de veículos: {ex.Message}");
+        }
     }
 
-    public class ModeloBMW
+    private void Encomendar(int veiculoId)
     {
-        public string Nome { get; set; } = string.Empty;
-        public decimal Preco { get; set; }
-        public string Imagem { get; set; } = string.Empty;
+        try
+        {
+            // Usar o método RegistarEncomenda do BMWFacade
+            BMWFacade.GetInstance().RegistarEncomenda(clienteId, veiculoId, "Encomenda realizada pelo catálogo.");
+            Console.WriteLine($"Encomenda realizada com sucesso! Veículo ID: {veiculoId}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao realizar a encomenda para o veículo ID {veiculoId}: {ex.Message}");
+        }
+    }
+
+    public class VeiculoCatalogo
+    {
+        public int Id { get; set; }
+        public string Modelo { get; set; } = string.Empty;
+        public decimal PrecoBase { get; set; }
     }
 }
 
@@ -85,13 +98,6 @@
         padding: 20px;
         text-align: center;
         width: 250px;
-    }
-
-    .car-image {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        margin-bottom: 10px;
     }
 
     .car-name {
