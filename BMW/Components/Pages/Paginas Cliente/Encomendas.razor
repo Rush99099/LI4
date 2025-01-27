@@ -1,6 +1,8 @@
 @page "/encomendas"
 @using BMW.Data.Data
-
+@using BMW.Data
+@inject UserState UserState
+@inject NavigationManager NavigationManager
 
 <PageTitle>Encomendas</PageTitle>
 
@@ -8,7 +10,7 @@
     UserName="Diogo Fernandes" 
     UserRole="Cliente"
     Button1Text="Encomendas"
-    Button1Href="@Button1Href" 
+    Button1Href="/encomendas"
     Button1Icon="📦"
     Button2Text="Catálogo"
     Button2Href="/catalogo"
@@ -54,23 +56,23 @@
 </TableLayout>
 
 @code {
-    [Parameter]
-    public int UserId { get; set; }
-
-    private string Button1Href => $"/encomendas/{UserId}";
-
     private List<EncomendaViewModel> ListaEncomendas = new();
-
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = null!;
 
     protected override void OnInitialized()
     {
         try
         {
-            // Carregar as encomendas com base no ID do utilizador
+            // Obter o UserId do UserState
+            var userId = UserState.UserId;
+
+            if (userId <= 0)
+            {
+                Console.WriteLine("Erro: Utilizador não autenticado.");
+                return;
+            }
+
             var facade = BMWFacade.GetInstance();
-            var encomendas = facade.GetListaEncomendas(UserId);
+            var encomendas = facade.GetListaEncomendas(userId);
 
             // Transformar as encomendas em um formato para exibição
             foreach (var encomenda in encomendas)

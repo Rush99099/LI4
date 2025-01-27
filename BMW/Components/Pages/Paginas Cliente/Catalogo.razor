@@ -1,6 +1,8 @@
 @page "/catalogo"
 @using BMW.Data.Data
 @using BMW.Data.Models
+@using BMW.Data
+@inject UserState UserState
 @inject NavigationManager NavigationManager
 
 <PageTitle>Catálogo</PageTitle>
@@ -37,7 +39,6 @@
 
 @code {
     private List<VeiculoCatalogo> veiculos = new();
-    private int clienteId = 1; // Substituir pelo ID do cliente autenticado
 
     protected override void OnInitialized()
     {
@@ -64,6 +65,14 @@
     {
         try
         {
+            // Verificar se o utilizador está autenticado
+            var clienteId = UserState.UserId;
+            if (clienteId <= 0)
+            {
+                Console.WriteLine("Erro: Utilizador não autenticado.");
+                return;
+            }
+
             // Usar o método RegistarEncomenda do BMWFacade
             BMWFacade.GetInstance().RegistarEncomenda(clienteId, veiculoId, "Encomenda realizada pelo catálogo.");
             Console.WriteLine($"Encomenda realizada com sucesso! Veículo ID: {veiculoId}");

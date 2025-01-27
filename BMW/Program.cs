@@ -16,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
+builder.Services.AddScoped<UserState>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

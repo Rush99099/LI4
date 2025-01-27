@@ -2,6 +2,7 @@
 @using BMW.Data.Data
 @using BMW.Data.Models
 @inject NavigationManager NavigationManager
+@using BMW.Data
 
 <PageTitle>Login</PageTitle>
 
@@ -22,6 +23,9 @@
     </div>
 </div>
 
+@inject NavigationManager NavigationManager
+@inject UserState UserState
+
 @code {
     private string email = string.Empty;
     private string password = string.Empty;
@@ -33,23 +37,20 @@
             var user = BMWFacade.GetInstance().LogIn(email, password);
             if (user != null)
             {
-                string destination = user.IsCliente
-                    ? $"/home?id={user.IdUtilizador}"
-                    : $"/funcionario?id={user.IdUtilizador}";
+                UserState?.SetUser(user.IdUtilizador, user.Nome);
+                Console.WriteLine($"Login bem-sucedido para o utilizador {user.Nome} (ID: {user.IdUtilizador})");
 
-                NavigationManager.NavigateTo(destination);
-            }
-            else
-            {
-                Console.WriteLine("Credenciais inválidas.");
+                // Redirecionar para o catálogo
+                NavigationManager.NavigateTo("/catalogo");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro durante o login: {ex.Message}");
+            Console.WriteLine($"Erro ao fazer login: {ex.Message}");
         }
     }
 }
+
 
 <style>
     .container {
