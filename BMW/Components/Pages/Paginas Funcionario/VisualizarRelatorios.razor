@@ -1,0 +1,103 @@
+@page "/relatorios/visualizar/{id:int}"
+@using BMW.Data
+@using BMW.Data.Models
+@using BMW.Data.Data
+@inject NavigationManager NavigationManager
+@inject UserState UserState
+
+<PageTitle>Visualizar Relatório</PageTitle>
+
+<TableLayout 
+    UserName="@UserState.UserName"
+    UserRole="Funcionário"
+    Button1Text="Gestão de Encomendas"
+    Button1Href="/funcionario/gestor-encomendas"
+    Button1Icon="📦"
+    Button2Text="Relatórios"
+    Button2Href="/funcionario/relatorios"
+    Button2Icon="📄"
+    Title="Detalhes do Relatório">
+
+    <div class="relatorio-container">
+        @if (RelatorioVisualizado != null)
+        {
+            <h3>Relatório Detalhado</h3>
+            <p><strong>ID:</strong> @RelatorioVisualizado.Id</p>
+            <p><strong>Tipo:</strong> @(RelatorioVisualizado.Tipo == 1 ? "Encomendas" : "Outro")</p>
+            <p><strong>Data de Geração:</strong> @RelatorioVisualizado.DataGeracao.ToString("dd-MM-yyyy")</p>
+            <p><strong>Conteúdo:</strong></p>
+            <p>@RelatorioVisualizado.Conteudo</p>
+            <button class="btn btn-back" @onclick="Voltar">Voltar</button>
+        }
+        else
+        {
+            <p>Carregando relatório...</p>
+        }
+    </div>
+</TableLayout>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Relatorio? RelatorioVisualizado;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            RelatorioVisualizado = BMWFacade.GetInstance().DownloadRelatorio(Id);
+            if (RelatorioVisualizado == null)
+            {
+                Console.WriteLine($"Relatório com ID {Id} não encontrado.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar relatório: {ex.Message}");
+        }
+    }
+
+    private void Voltar()
+    {
+        NavigationManager.NavigateTo("/funcionario/relatorios");
+    }
+}
+
+<style>
+    .relatorio-container {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        text-align: left;
+        color: #121212;
+        max-width: 600px;
+    using BMW.Data;
+        margin: 20px auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .relatorio-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #007bff;
+    }
+    
+    .btn-back {
+        display: block;
+        margin: 20px auto;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-align: center;
+    }
+
+    .btn-back:hover {
+        background-color: #0056b3;
+    }
+</style>

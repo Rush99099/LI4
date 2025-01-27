@@ -21,30 +21,42 @@
             <input type="password" placeholder="Confirm your new password" class="form-input" @bind="confirmpassword" />
             <button class="btn btn-primary" @onclick="HandleRecover">Change password</button>
         </div>
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="error-message">
+                <p>@ErrorMessage</p>
+            </div>
+        }
     </div>
 </div>
-
-@inject NavigationManager NavigationManager
-@inject UserState UserState
 
 @code {
     private string email = string.Empty;
     private string password = string.Empty;
     private string confirmpassword = string.Empty;
+    private string ErrorMessage = string.Empty;
 
     private void HandleRecover()
     {
-        if(confirmpassword == password){
-            if(BMWFacade.GetInstance().AtualizarPassword(email, password)){
+        ErrorMessage = string.Empty;
+
+        if (confirmpassword == password)
+        {
+            if (BMWFacade.GetInstance().AtualizarPassword(email, password))
+            {
                 NavigationManager.NavigateTo("/login");
-            }else{
-                Console.WriteLine("Email não existe.");
             }
-        }else Console.WriteLine("Passwords não são iguais.");
-        
+            else
+            {
+                ErrorMessage = "Email não existe.";
+            }
+        }
+        else
+        {
+            ErrorMessage = "Passwords não coincidem.";
+        }
     }
 }
-
 
 <style>
     .container {

@@ -79,7 +79,7 @@
     private void VisualizarRelatorio(int idRelatorio)
     {
         Console.WriteLine($"Visualizando o relatório com ID: {idRelatorio}");
-        // Aqui poderia redirecionar para uma página detalhada do relatório
+        NavigationManager.NavigateTo($"/relatorios/visualizar/{idRelatorio}");
     }
 }
 

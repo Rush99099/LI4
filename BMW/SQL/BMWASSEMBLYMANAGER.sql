@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `ASSEMBLYMNGR`.`Relatorio` (
   `idRelatorio` INT NOT NULL AUTO_INCREMENT,
   `Tipo` INT NOT NULL,
   `DataGeracao` DATETIME NOT NULL,
-  `Conteudo` VARCHAR(45) NOT NULL,
+  `Conteudo` VARCHAR(250) NOT NULL,
   `idFuncionario` INT NOT NULL,
   PRIMARY KEY (`idRelatorio`),
   UNIQUE INDEX `idRelatorio_UNIQUE` (`idRelatorio` ASC) VISIBLE)

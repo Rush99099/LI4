@@ -35,7 +35,7 @@ namespace BMW.Data.Data
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
-                        int count = (int)command.ExecuteScalar();
+                        long count = (long)command.ExecuteScalar();
                         return count > 0;
                     }
                 }
