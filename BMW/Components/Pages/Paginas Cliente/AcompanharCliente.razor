@@ -85,7 +85,7 @@
                 ProgressoPercentual = 0;
             }
 
-            FaseImagem = $"images/fases/{FaseAtual.Ordem}.png";
+            FaseImagem = $"images/fases/fase{FaseAtual.Ordem}.png";
         }
         catch (Exception ex)
         {
@@ -172,7 +172,7 @@
         const img = document.getElementById('faseImg');
         const legenda = document.getElementById('faseLegenda');
 
-        img.src = `images/fases/${faseIndex}.png`;
+        img.src = `images/fases/fase${faseIndex}.png`;
         legenda.textContent = `Fase ${faseIndex} - ${getDescricaoFase(faseIndex)}`;
 
         // Resetar estilos anteriores
