@@ -1,6 +1,9 @@
 @page "/funcionario/gestor-encomendas"
+@using BMW.Data.Data
 @using BMW.Data
+@using BMW.Data.Models
 @inject UserState UserState
+@inject NavigationManager NavigationManager
 
 <PageTitle>Gestão de Encomendas</PageTitle>
 
@@ -27,39 +30,81 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>0032</td>
-                <td>BMW i7</td>
-                <td>12-09-2024</td>
-                <td>Em Produção</td>
-                <td>🔔</td>
-                <td>
-                    <NavLink href="/funcionario/gestor-encomendas/acompanhar/0032" class="btn">Acompanhar</NavLink>
-                </td>
-            </tr>
-            <tr>
-                <td>0042</td>
-                <td>BMW X6</td>
-                <td>05-08-2024</td>
-                <td>Em Produção</td>
-                <td>🔔</td>
-                <td>
-                    <NavLink href="/funcionario/gestor-encomendas/acompanhar/0042" class="btn">Acompanhar</NavLink>
-                </td>
-            </tr>
-            <tr>
-                <td>0123</td>
-                <td>BMW M4 Coupé</td>
-                <td>24-06-2024</td>
-                <td>Concluída</td>
-                <td>-</td>
-                <td>
-                    <NavLink href="/funcionario/gestor-encomendas/acompanhar/0123" class="btn">Acompanhar</NavLink>
-                </td>
-            </tr>
+            @if (ListaEncomendas.Count > 0)
+            {
+                @foreach (var encomenda in ListaEncomendas)
+                {
+                    <tr>
+                        <td>@encomenda.Id</td>
+                        <td>@encomenda.Veiculo</td>
+                        <td>@encomenda.Data.ToString("dd-MM-yyyy")</td>
+                        <td>@encomenda.Estado</td>
+                        <td>@(encomenda.TemAlerta ? "🔔" : "-")</td>
+                        <td>
+                            <button class="btn" @onclick="() => AcompanharEncomenda(encomenda.Id)">Acompanhar</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" style="text-align:center;">Não há encomendas registadas.</td>
+                </tr>
+            }
         </tbody>
     </table>
 </TableLayout>
+
+@code {
+    private List<EncomendaViewModel> ListaEncomendas = new();
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            var facade = BMWFacade.GetInstance();
+
+            // Obter todas as encomendas da base de dados
+            var encomendas = facade.GetAllEncomendas();
+
+            // Transformar as encomendas em um formato para exibição
+            foreach (var encomenda in encomendas)
+            {
+                var veiculo = facade.GetCatalogo().FirstOrDefault(v => v.Id == encomenda.IdVeiculo)?.Modelo ?? "Desconhecido";
+                var estado = facade.GetEstados().FirstOrDefault(e => e.IdEstado == encomenda.Estado)?.NomeEstado ?? "Desconhecido";
+
+                ListaEncomendas.Add(new EncomendaViewModel
+                {
+                    Id = encomenda.Id,
+                    Veiculo = veiculo,
+                    Data = encomenda.DataRegisto,
+                    Estado = estado,
+                    TemAlerta = facade.GetAlertas().Any(a => a.IdProgresso == encomenda.Id)
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar encomendas: {ex.Message}");
+        }
+    }
+
+    private void AcompanharEncomenda(int encomendaId)
+    {
+        // Navegar para a página de acompanhamento
+        NavigationManager.NavigateTo($"/funcionario/gestor-encomendas/acompanhar/{encomendaId}");
+    }
+
+    public class EncomendaViewModel
+    {
+        public int Id { get; set; }
+        public string Veiculo { get; set; } = string.Empty;
+        public DateTime Data { get; set; }
+        public string Estado { get; set; } = string.Empty;
+        public bool TemAlerta { get; set; }
+    }
+}
 
 <style>
     .table {

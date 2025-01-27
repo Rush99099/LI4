@@ -1,42 +1,33 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace BMW.Data.Models
 {
-public class FaseMontagem
-{
-    // Propriedades da Fase de Montagem
-    public int Id { get; set; } // Identificador único da fase de montagem
-    public string Descricao { get; set; } // Descrição da fase (ex.: "Pintura")
-    public int Ordem { get; set; } // Ordem da fase no processo de montagem
-    public int TempoDeExecucaoExpectativa { get; set; } // Tempo esperado de execução (em minutos)
-
-    // Construtor padrão
-    public FaseMontagem(int id, int ordem, string descricao, int tempoDeExecucaoExpectativa)
+    public class FaseDeMontagem
     {
-        if (string.IsNullOrWhiteSpace(descricao))
-        {
-            throw new ArgumentException("A descrição não pode ser vazia ou nula.");
-        }
+        [Key]
+        [Display(Name = "idEstado de montagem")] // Para garantir consistência com o banco
+        public int Id { get; set; } 
 
-        if (ordem <= 0)
-        {
-            throw new ArgumentException("A ordem deve ser um número positivo.");
-        }
+        [Required]
+        public int Ordem { get; set; }
 
-        if (tempoDeExecucaoExpectativa <= 0)
-        {
-            throw new ArgumentException("O tempo de execução esperado deve ser maior que zero.");
-        }
+        [Required, MaxLength(100)]
+        public string Descricao { get; set; } = string.Empty;
 
-        Id = id;
-        Descricao = descricao;
-        Ordem = ordem;
-        TempoDeExecucaoExpectativa = tempoDeExecucaoExpectativa;
+        [Required]
+        public TimeSpan TempoExecucaoExpectavel { get; set; }
+
+        // Construtor padrão
+        public FaseDeMontagem() { }
+
+        // Construtor com parâmetros
+        public FaseDeMontagem(int id, int ordem, string descricao, TimeSpan tempoExecucaoExpectavel)
+        {
+            Id = id;
+            Ordem = ordem;
+            Descricao = descricao;
+            TempoExecucaoExpectavel = tempoExecucaoExpectavel;
+        }
     }
-
-    // Método auxiliar para exibir informações da fase
-    public override string ToString()
-    {
-        return $"FaseMontagem ID: {Id}, Descrição: {Descricao}, Ordem: {Ordem}, Tempo Esperado: {TempoDeExecucaoExpectativa} minutos";
-    }
-}
-
 }

@@ -50,25 +50,25 @@ namespace BMW.Data.Data
         // Obtém uma encomenda pelo ID
         public Encomenda? Get(int id)
         {
-            string query = "SELECT * FROM Encomenda WHERE idEncomenda = @Id";
+            string query = "SELECT * FROM Encomenda WHERE idEncomenda = @IdEncomenda";
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Id", id);
+                        command.Parameters.AddWithValue("@IdEncomenda", id);
                         connection.Open();
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
                                 return new Encomenda(
-                                    reader.GetInt32(reader.GetOrdinal("Id")),
+                                    reader.GetInt32(reader.GetOrdinal("idEncomenda")),
                                     reader.GetDateTime(reader.GetOrdinal("DataRegisto")),
                                     reader.IsDBNull(reader.GetOrdinal("Observacoes")) ? null : reader.GetString(reader.GetOrdinal("Observacoes")),
-                                    reader.GetInt32(reader.GetOrdinal("IdCliente")),
-                                    reader.GetInt32(reader.GetOrdinal("IdVeiculo")),
+                                    reader.GetInt32(reader.GetOrdinal("idCliente")),
+                                    reader.GetInt32(reader.GetOrdinal("idVeiculo")),
                                     reader.GetInt32(reader.GetOrdinal("Estado"))
                                 );
                             }
@@ -78,10 +78,12 @@ namespace BMW.Data.Data
             }
             catch (Exception ex)
             {
-                throw new DAOException($"Erro ao obter encomenda com ID {id}: {ex.Message}");
+                throw new DAOException($"Erro ao obter encomenda com ID {id}: {ex.Message}", ex);
             }
             return null;
         }
+        
+
 
         // Insere ou atualiza uma encomenda na base de dados
         public void Put(Encomenda encomenda)

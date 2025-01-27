@@ -1,5 +1,7 @@
 using BMW.Data.Models;
 using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
 
 namespace BMW.Data.Data
 {
@@ -33,14 +35,14 @@ namespace BMW.Data.Data
                         command.Parameters.AddWithValue("@IdEncomenda", idEncomenda);
                         command.Parameters.AddWithValue("@IdFase", idFase);
                         connection.Open();
-                        int count = (int)command.ExecuteScalar();
+                        int count = Convert.ToInt32(command.ExecuteScalar());
                         return count > 0;
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new DAOException($"Erro ao verificar a existência do progresso com ID {idEncomenda} {idFase}: {ex.Message}");
+                throw new DAOException($"Erro ao verificar a existência do progresso com ID {idEncomenda} e fase {idFase}: {ex.Message}");
             }
         }
 
@@ -65,8 +67,7 @@ namespace BMW.Data.Data
                                     reader.GetInt32(reader.GetOrdinal("idEncomenda")),
                                     reader.GetInt32(reader.GetOrdinal("idFase")),
                                     reader.GetDateTime(reader.GetOrdinal("StartFase")),
-                                    reader.GetDateTime(reader.GetOrdinal("EndFase")),
-                                    reader.GetString(reader.GetOrdinal("Observacoes")),
+                                    reader.IsDBNull(reader.GetOrdinal("EndFase")) ? null : reader.GetDateTime(reader.GetOrdinal("EndFase")),
                                     reader.GetInt32(reader.GetOrdinal("idFuncionario"))
                                 );
                             }
@@ -76,7 +77,7 @@ namespace BMW.Data.Data
             }
             catch (Exception ex)
             {
-                throw new DAOException($"Erro ao obter o progresso com ID {idEncomenda} {idFase}: {ex.Message}");
+                throw new DAOException($"Erro ao obter o progresso com ID {idEncomenda} e fase {idFase}: {ex.Message}");
             }
             return null;
         }
@@ -85,8 +86,8 @@ namespace BMW.Data.Data
         public void Put(Progresso progresso)
         {
             string query = ContainsKey(progresso.IdEncomenda, progresso.IdFase)
-                ? "UPDATE Progresso SET StartFase = @StartFase, EndFase = @EndFase, Observacoes = @Observacoes, idFuncionario = @IdFuncionario WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase"
-                : "INSERT INTO Progresso (idEncomenda, StartFase, EndFase, Observacoes, idFuncionario) VALUES (@Id, @StartFase, @EndFase, @Observacoes, @IdFuncionario)";
+                ? "UPDATE Progresso SET StartFase = @StartFase, EndFase = @EndFase, idFuncionario = @IdFuncionario WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase"
+                : "INSERT INTO Progresso (idEncomenda, idFase, StartFase, EndFase, idFuncionario) VALUES (@IdEncomenda, @IdFase, @StartFase, @EndFase, @IdFuncionario)";
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
@@ -97,7 +98,6 @@ namespace BMW.Data.Data
                         command.Parameters.AddWithValue("@IdFase", progresso.IdFase);
                         command.Parameters.AddWithValue("@StartFase", progresso.StartFase);
                         command.Parameters.AddWithValue("@EndFase", progresso.EndFase);
-                        command.Parameters.AddWithValue("@Observacoes", progresso.Observacoes);
                         command.Parameters.AddWithValue("@IdFuncionario", progresso.IdFuncionario);
                         connection.Open();
                         command.ExecuteNonQuery();
@@ -106,30 +106,7 @@ namespace BMW.Data.Data
             }
             catch (Exception ex)
             {
-                throw new DAOException($"Erro ao salvar o progresso com ID {progresso.IdEncomenda} {progresso.IdFase}: {ex.Message}");
-            }
-        }
-
-        // Remove um progresso pelo ID
-        public void Remove(int idEncomenda, int idFase)
-        {
-            string query = "DELETE FROM Progresso WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase";
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
-                {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@IdEncomenda", idEncomenda);
-                        command.Parameters.AddWithValue("@IdFase", idFase);
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new DAOException($"Erro ao remover o progresso com ID {idEncomenda} {idFase}: {ex.Message}");
+                throw new DAOException($"Erro ao salvar o progresso com ID {progresso.IdEncomenda} e fase {progresso.IdFase}: {ex.Message}");
             }
         }
 
@@ -149,15 +126,13 @@ namespace BMW.Data.Data
                         {
                             while (reader.Read())
                             {
-                                var progresso = new Progresso(
+                                progressos.Add(new Progresso(
                                     reader.GetInt32(reader.GetOrdinal("idEncomenda")),
                                     reader.GetInt32(reader.GetOrdinal("idFase")),
                                     reader.GetDateTime(reader.GetOrdinal("StartFase")),
-                                    reader.GetDateTime(reader.GetOrdinal("EndFase")),
-                                    reader.GetString(reader.GetOrdinal("Observacoes")),
+                                    reader.IsDBNull(reader.GetOrdinal("EndFase")) ? null : reader.GetDateTime(reader.GetOrdinal("EndFase")),
                                     reader.GetInt32(reader.GetOrdinal("idFuncionario"))
-                                );
-                                progressos.Add(progresso);
+                                ));
                             }
                         }
                     }
@@ -170,11 +145,11 @@ namespace BMW.Data.Data
             return progressos;
         }
 
+        // Obtém progressos por ID da encomenda
         public List<Progresso> GetByEncomendaId(int encomendaId)
         {
+            string query = "SELECT * FROM Progresso WHERE idEncomenda = @IdEncomenda";
             var progressoList = new List<Progresso>();
-            string query = "SELECT * FROM Progresso WHERE IdEncomenda = @IdEncomenda";
-
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
@@ -183,21 +158,17 @@ namespace BMW.Data.Data
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", encomendaId);
                         connection.Open();
-
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                var progresso = new Progresso(
-                                    reader.GetInt32(reader.GetOrdinal("IdEncomenda")),
-                                    reader.GetInt32(reader.GetOrdinal("IDFase")),
+                                progressoList.Add(new Progresso(
+                                    reader.GetInt32(reader.GetOrdinal("idEncomenda")),
+                                    reader.GetInt32(reader.GetOrdinal("idFase")),
                                     reader.GetDateTime(reader.GetOrdinal("StartFase")),
-                                    reader.GetDateTime(reader.GetOrdinal("EndFase")),
-                                    reader.GetString(reader.GetOrdinal("Observacoes")),
-                                    reader.GetInt32(reader.GetOrdinal("IdFuncionario"))
-                                );
-
-                                progressoList.Add(progresso);
+                                    reader.IsDBNull(reader.GetOrdinal("EndFase")) ? null : reader.GetDateTime(reader.GetOrdinal("EndFase")),
+                                    reader.GetInt32(reader.GetOrdinal("idFuncionario"))
+                                ));
                             }
                         }
                     }
@@ -207,9 +178,7 @@ namespace BMW.Data.Data
             {
                 throw new DAOException($"Erro ao buscar progresso da encomenda {encomendaId}: {ex.Message}");
             }
-
             return progressoList;
         }
-
     }
 }
