@@ -1,4 +1,6 @@
 @inherits LayoutComponentBase
+@using BMW.Data
+@inject UserState UserState
 
 <div class="layout-container">
     <aside class="sidebar">
@@ -9,7 +11,7 @@
         </div>
 
         <div class="user-info">
-            <p class="user-name">@UserName</p>
+            <p class="user-name">@UserState.UserName</p>
             <p class="user-role">@UserRole</p>
             <div class="divider"></div>
         </div>

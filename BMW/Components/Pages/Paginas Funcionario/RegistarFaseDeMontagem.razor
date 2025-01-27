@@ -1,9 +1,11 @@
 @page "/funcionario/gestor-encomendas/acompanhar/registar-fase/{id:int}"
+@using BMW.Data
+@inject UserState UserState
 
 <PageTitle>Registar Fase de Montagem</PageTitle>
 
 <TableLayout 
-    UserName="Diogo Fernandes"
+    UserName="@UserState.UserName"
     UserRole="Funcionário"
     Button1Text="Gestão de Encomendas"
     Button1Href="/funcionario/gestor-encomendas"

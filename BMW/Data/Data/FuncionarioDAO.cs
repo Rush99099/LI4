@@ -84,13 +84,11 @@ namespace BMW.Data.Data
                         {
                             if (reader.Read())
                             {
-                                int? supervisor = reader.IsDBNull(reader.GetOrdinal("Supervisor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("supervisor"));
-
                                 return new Funcionario(
-                                    reader.GetInt32(reader.GetOrdinal("idFuncionario")),
-                                    reader.GetDateTime(reader.GetOrdinal("contractDate")),
-                                    reader.GetInt32(reader.GetOrdinal("Posicao")),
-                                    reader.GetInt32(reader.GetOrdinal("supervisor")) 
+                                    idFuncionario: reader.GetInt32(reader.GetOrdinal("idFuncionario")),
+                                    contractDate: reader.GetDateTime(reader.GetOrdinal("contractDate")),
+                                    posicao: reader.GetInt32(reader.GetOrdinal("Posicao")),
+                                    supervisor: reader.IsDBNull(reader.GetOrdinal("supervisor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("supervisor"))
                                 );
                             }
                         }
@@ -103,6 +101,7 @@ namespace BMW.Data.Data
             }
             return null;
         }
+
 
 
         // Insere ou atualiza um funcionário na base de dados

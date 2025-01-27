@@ -57,7 +57,7 @@ namespace BMW.Data.Data
             }
             throw new Exception("Credenciais inválidas");
         }
-
+        
         public void ChangePassword(int id, string password){
             _utilizadorDAO.ChangePassword(id, password);
         }
@@ -76,6 +76,11 @@ namespace BMW.Data.Data
         }
         
         // 2. Gestão de Encomendas
+        public List<Estado> GetEstados()
+        {
+            return EstadoDAO.GetInstance().GetAll().ToList();
+        }
+        
         public ICollection<Encomenda> GetListaEncomendas(int clienteId)
         {
             return _encomendaDAO.GetByClienteID(clienteId);
@@ -121,6 +126,8 @@ namespace BMW.Data.Data
                     throw new Exception($"A posição com ID {posicaoId} não existe. Verifique o ID da posição e tente novamente.");
                 }
 
+                
+
                 // 2. Criar o utilizador associado ao funcionário
                 var utilizador = new Utilizador(email, nome, password, false);
                 _utilizadorDAO.Put(utilizador);
@@ -151,15 +158,39 @@ namespace BMW.Data.Data
             }
         }
 
-
-
-        
         public void DeleteFuncionario(int funcionarioId)
         {
             _funcionarioDAO.Remove(funcionarioId);
             _utilizadorDAO.Remove(funcionarioId);
         }
 
+        public string GetPosicaoPorFuncionario(int funcionarioId)
+        {
+            try
+            {
+                var funcionario = FuncionarioDAO.GetInstance().Get(funcionarioId);
+                if (funcionario == null)
+                {
+                    Console.WriteLine($"Funcionário com ID {funcionarioId} não encontrado.");
+                    return "Desconhecido";
+                }
+        
+                var posicao = PosicaoDAO.GetInstance().Get(funcionario.Posicao);
+                if (posicao == null)
+                {
+                    Console.WriteLine($"Posição com ID {funcionario.Posicao} não encontrada.");
+                    return "Desconhecido";
+                }
+        
+                return posicao.Tipo;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao obter posição para o funcionário {funcionarioId}: {ex.Message}");
+                return "Desconhecido";
+            }
+        }
+        
         // 5. Gestão de Progresso
         public void RegistarProgresso(int encomendaId, int faseId, DateTime dataInicio, DateTime? dataFim, int idFuncionario)
         {
@@ -195,5 +226,20 @@ namespace BMW.Data.Data
         {
             return _progressoDAO.GetByEncomendaId(encomendaId);
         }
+
+        //8. Gestao de Posicoes
+
+        public List<Posicao> GetPosicoes()
+        {
+            try
+            {
+                return PosicaoDAO.GetInstance().GetAll();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao obter as posições: {ex.Message}", ex);
+            }
+        }
+        
     } 
 }

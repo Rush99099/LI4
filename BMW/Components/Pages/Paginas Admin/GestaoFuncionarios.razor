@@ -1,12 +1,14 @@
 @page "/admin/gestor-funcionarios"
 @using BMW.Data.Data
 @using BMW.Data.Models
+@using BMW.Data
 @inject NavigationManager NavigationManager
+@inject UserState UserState
 
 <PageTitle>Gestão de Funcionários</PageTitle>
 
 <TableLayout 
-    UserName="Diogo Fernandes"
+    UserName="@UserState.UserName"
     UserRole="Admin"
     Button1Text="Gestão de Funcionários"
     Button1Href="/admin/gestor-funcionarios"
@@ -28,7 +30,7 @@
             </tr>
         </thead>
         <tbody>
-            @if (funcionarios == null || !funcionarios.Any())
+            @if (funcionariosDetalhados == null || !funcionariosDetalhados.Any())
             {
                 <tr>
                     <td colspan="6">Nenhum funcionário encontrado.</td>
@@ -36,11 +38,11 @@
             }
             else
             {
-                @foreach (var funcionario in funcionarios)
+                @foreach (var funcionario in funcionariosDetalhados)
                 {
                     <tr>
                         <td>@funcionario.IdFuncionario</td>
-                        <td>@GetNomeFuncionario(funcionario.IdFuncionario)</td>
+                        <td>@funcionario.Nome</td>
                         <td>@funcionario.ContractDate.ToShortDateString()</td>
                         <td>@funcionario.Posicao</td>
                         <td>@(funcionario.Supervisor.HasValue ? funcionario.Supervisor.ToString() : "N/A")</td>
@@ -59,14 +61,24 @@
 </TableLayout>
 
 @code {
-    private List<Funcionario> funcionarios = new List<Funcionario>();
+    private List<FuncionarioDetalhado> funcionariosDetalhados = new();
 
     protected override void OnInitialized()
     {
         try
         {
-            // Obter a lista de funcionários do BMWFacade
-            funcionarios = BMWFacade.GetInstance().GetFuncionarios().ToList();
+            // Obter funcionários com informações detalhadas
+            var funcionarios = BMWFacade.GetInstance().GetFuncionarios();
+            var posicoes = BMWFacade.GetInstance().GetPosicoes();
+
+            funcionariosDetalhados = funcionarios.Select(f => new FuncionarioDetalhado
+            {
+                IdFuncionario = f.IdFuncionario,
+                Nome = BMWFacade.GetInstance().GetUtilizador(f.IdFuncionario).Nome,
+                ContractDate = f.ContractDate,
+                Posicao = posicoes.FirstOrDefault(p => p.IdPosicao == f.Posicao)?.Tipo ?? "Desconhecida",
+                Supervisor = f.Supervisor
+            }).ToList();
         }
         catch (Exception ex)
         {
@@ -81,7 +93,8 @@
             BMWFacade.GetInstance().DeleteFuncionario(id);
             Console.WriteLine($"Funcionário com ID {id} removido com sucesso.");
 
-            funcionarios = BMWFacade.GetInstance().GetFuncionarios().ToList();
+            // Recarregar os funcionários
+            OnInitialized();
         }
         catch (Exception ex)
         {
@@ -89,19 +102,20 @@
         }
     }
 
-    private string GetNomeFuncionario(int idFuncionario)
-    {
-        // Método fictício para obter o nome do funcionário.
-        // Adapte conforme a implementação real.
-        return BMWFacade.GetInstance().GetUtilizador(idFuncionario).Nome;
-    }
-
     private void NavigateToAdicionarFuncionario()
     {
         NavigationManager.NavigateTo("/admin/gestor-funcionarios/adicionar-funcionario");
     }
-}
 
+    private class FuncionarioDetalhado
+    {
+        public int IdFuncionario { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public DateTime ContractDate { get; set; }
+        public string Posicao { get; set; } = string.Empty;
+        public int? Supervisor { get; set; }
+    }
+}
 <style>
     .table {
         width: 100%;

@@ -7,7 +7,7 @@
 <PageTitle>Encomendas</PageTitle>
 
 <TableLayout 
-    UserName="Diogo Fernandes" 
+    UserName="@UserState.UserName"
     UserRole="Cliente"
     Button1Text="Encomendas"
     Button1Href="/encomendas"
@@ -73,6 +73,7 @@
 
             var facade = BMWFacade.GetInstance();
             var encomendas = facade.GetListaEncomendas(userId);
+            var estados = facade.GetEstados(); // Obter os estados da tabela Estado
 
             // Transformar as encomendas em um formato para exibição
             foreach (var encomenda in encomendas)
@@ -82,7 +83,7 @@
                     Id = encomenda.Id,
                     Veiculo = facade.GetCatalogo().FirstOrDefault(v => v.Id == encomenda.IdVeiculo)?.Modelo ?? "Desconhecido",
                     Data = encomenda.DataRegisto,
-                    Estado = "Em Produção", // Ajustar com base no estado real
+                    Estado = estados.FirstOrDefault(e => e.IdEstado == encomenda.Estado)?.NomeEstado ?? "Desconhecido",
                     TemAlerta = facade.GetAlertas().Any(a => a.IdProgresso == encomenda.Id)
                 });
             }
@@ -108,7 +109,6 @@
         public bool TemAlerta { get; set; }
     }
 }
-
 <style>
     .table {
         width: 100%;

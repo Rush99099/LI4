@@ -1,9 +1,11 @@
 @page "/encomendas/acompanhar/{id:int}"
+@using BMW.Data
+@inject UserState UserState
 
 <PageTitle>Acompanhar Encomenda</PageTitle>
 
 <TableLayout 
-    UserName="Diogo Fernandes"
+    UserName="@UserState.UserName"
     UserRole="Cliente"
     Button1Text="Encomendas"
     Button1Href="/encomendas"

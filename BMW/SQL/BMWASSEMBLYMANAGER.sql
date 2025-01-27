@@ -63,8 +63,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `ASSEMBLYMNGR`.`Fase de montagem` (
   `idEstado de montagem` INT NOT NULL AUTO_INCREMENT,
   `Ordem` INT NOT NULL,
-  `Descricao` VARCHAR(45) NOT NULL,
-  `TempoExecucaoExpectavel` DATETIME NOT NULL,
+  `Descricao` VARCHAR(100) NOT NULL,
+  `TempoExecucaoExpectavel` TIME NOT NULL,
   PRIMARY KEY (`idEstado de montagem`),
   UNIQUE INDEX `idEstado de montagem_UNIQUE` (`idEstado de montagem` ASC) VISIBLE)
 ENGINE = InnoDB;

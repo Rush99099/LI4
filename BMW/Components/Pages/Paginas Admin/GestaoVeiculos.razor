@@ -1,12 +1,14 @@
 @page "/admin/gestor-veiculos"
 @using BMW.Data.Data
 @using BMW.Data.Models
+@using BMW.Data
 @inject NavigationManager NavigationManager
+@inject UserState UserState
 
 <PageTitle>Gestão de Veículos</PageTitle>
 
 <TableLayout 
-    UserName="Diogo Fernandes"
+    UserName="@UserState.UserName"
     UserRole="Admin"
     Button1Text="Gestão de Funcionários"
     Button1Href="/admin/gestor-funcionarios"

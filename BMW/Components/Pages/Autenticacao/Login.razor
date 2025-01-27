@@ -35,13 +35,33 @@
         try
         {
             var user = BMWFacade.GetInstance().LogIn(email, password);
+
             if (user != null)
             {
-                UserState?.SetUser(user.IdUtilizador, user.Nome);
+                UserState.SetUser(user.IdUtilizador, user.Nome);
                 Console.WriteLine($"Login bem-sucedido para o utilizador {user.Nome} (ID: {user.IdUtilizador})");
 
-                // Redirecionar para o catálogo
-                NavigationManager.NavigateTo("/catalogo");
+                if (!user.IsCliente)
+                {
+                    var posicao = BMWFacade.GetInstance().GetPosicaoPorFuncionario(user.IdUtilizador);
+                    Console.WriteLine($"Posição do funcionário: {posicao}");
+
+                    if (posicao == "Administrador")
+                    {
+                        NavigationManager.NavigateTo("/admin");
+                        return;
+                    }
+
+                    NavigationManager.NavigateTo("/funcionario");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/home");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Credenciais inválidas. Tente novamente.");
             }
         }
         catch (Exception ex)

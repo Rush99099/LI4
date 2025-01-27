@@ -1,9 +1,12 @@
 @page "/admin"
+@using BMW.Data
+@inject NavigationManager Navigation
+@inject UserState UserState
 
 <PageTitle>Página Inicial - Administrador</PageTitle>
 
 <SidebarLayout 
-    UserName="Diogo Fernandes"
+    UserName="@UserState.UserName"
     UserRole="Administrador"
     Button1Text="Gestão de Funcionários"
     Button1Href="/admin/gestor-funcionarios"

@@ -1,9 +1,12 @@
 @page "/funcionario"
+@using BMW.Data
+@inject NavigationManager Navigation
+@inject UserState UserState
 
 <PageTitle>Página Inicial - Funcionário</PageTitle>
 
 <SidebarLayout 
-    UserName="Diogo Fernandes"
+    UserName="@UserState.UserName"
     UserRole="Funcionário"
     Button1Text="Gestão de Encomendas"
     Button1Href="/funcionario/gestor-encomendas"

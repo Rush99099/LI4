@@ -1,10 +1,12 @@
 @page "/admin/gestor-funcionarios/adicionar-funcionario"
 @using BMW.Data.Data
 @using BMW.Data.Models
+@using BMW.Data
 @inject NavigationManager NavigationManager
+@inject UserState UserState
 
 <TableLayout 
-    UserName="Diogo Fernandes"
+    UserName="@UserState.UserName"
     UserRole="Admin"
     Button1Text="Gestão de Funcionários"
     Button1Href="/admin/gestor-funcionarios"
@@ -30,8 +32,14 @@
                 <input type="password" @bind="password" placeholder="Password" class="form-input" />
             </div>
             <div>
-                <label>ID da Posição:</label>
-                <input type="number" @bind="posicaoId" placeholder="ID da Posição" class="form-input" />
+                <label>Posição:</label>
+                <select @bind="posicaoId" class="form-input">
+                    <option value="">-- Selecione uma posição --</option>
+                    @foreach (var posicao in posicoes)
+                    {
+                        <option value="@posicao.IdPosicao">@posicao.Tipo</option>
+                    }
+                </select>
             </div>
             <div>
                 <label>ID do Supervisor (Opcional):</label>
@@ -49,21 +57,36 @@
     private string nome = string.Empty;
     private string email = string.Empty;
     private string password = string.Empty;
-    private int posicaoId;
+    private int? posicaoId; // Armazena o ID selecionado do dropdown
     private int? supervisorId;
+
+    private List<Posicao> posicoes = new();
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            // Carregar as posições disponíveis da base de dados
+            posicoes = BMWFacade.GetInstance().GetPosicoes().ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar posições: {ex.Message}");
+        }
+    }
 
     private void AddFuncionario()
     {
         try
         {
-            if (string.IsNullOrEmpty(nome) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || posicaoId <= 0)
+            if (string.IsNullOrEmpty(nome) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || posicaoId == null || posicaoId <= 0)
             {
                 Console.WriteLine("Todos os campos obrigatórios devem ser preenchidos.");
                 return;
             }
 
             // Adicionar funcionário utilizando BMWFacade
-            BMWFacade.GetInstance().AddFuncionario(nome, email, password, DateTime.Today, posicaoId, supervisorId);
+            BMWFacade.GetInstance().AddFuncionario(nome, email, password, DateTime.Today, posicaoId.Value, supervisorId);
 
             Console.WriteLine("Funcionário adicionado com sucesso!");
             NavigationManager.NavigateTo("/admin/gestor-funcionarios");
