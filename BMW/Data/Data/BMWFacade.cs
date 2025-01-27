@@ -154,5 +154,10 @@ namespace BMW.Data.Data
         {
             return _relatorioDAO.Get(relatorioId);
         }
+
+        public List<Progresso> GetProgresso(int encomendaId)
+        {
+            return _progressoDAO.GetByEncomendaId(encomendaId);
+        }
     } 
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using BMW.Data.Models;
 using MySql.Data.MySqlClient;
 
@@ -172,5 +169,47 @@ namespace BMW.Data.Data
             }
             return progressos;
         }
+
+        public List<Progresso> GetByEncomendaId(int encomendaId)
+        {
+            var progressoList = new List<Progresso>();
+            string query = "SELECT * FROM Progresso WHERE IdEncomenda = @IdEncomenda";
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@IdEncomenda", encomendaId);
+                        connection.Open();
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var progresso = new Progresso(
+                                    reader.GetInt32(reader.GetOrdinal("IdEncomenda")),
+                                    reader.GetInt32(reader.GetOrdinal("IDFase")),
+                                    reader.GetDateTime(reader.GetOrdinal("StartFase")),
+                                    reader.GetDateTime(reader.GetOrdinal("EndFase")),
+                                    reader.GetString(reader.GetOrdinal("Observacoes")),
+                                    reader.GetInt32(reader.GetOrdinal("IdFuncionario"))
+                                );
+
+                                progressoList.Add(progresso);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DAOException($"Erro ao buscar progresso da encomenda {encomendaId}: {ex.Message}");
+            }
+
+            return progressoList;
+        }
+
     }
 }
