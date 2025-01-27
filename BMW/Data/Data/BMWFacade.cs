@@ -261,9 +261,22 @@ namespace BMW.Data.Data
         // ================================
         public void CriarRelatorio(int tipo, string conteudo, int funcionarioId)
         {
-            var relatorio = new Relatorio(0, tipo, DateTime.Now, conteudo, funcionarioId.ToString());
+            var relatorio = new Relatorio(0, tipo, DateTime.Now, conteudo, funcionarioId);
             _relatorioDAO.Put(relatorio);
         }
+
+        public List<Relatorio> GetRelatorios()
+        {
+            try
+            {
+                return RelatorioDAO.GetInstance().GetAll().ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao buscar relatórios: {ex.Message}", ex);
+            }
+        }
+
 
         public Relatorio? DownloadRelatorio(int relatorioId)
         {

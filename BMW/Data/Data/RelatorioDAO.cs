@@ -67,7 +67,7 @@ namespace BMW.Data.Data
                                     reader.GetInt32(reader.GetOrdinal("Tipo")),
                                     reader.GetDateTime(reader.GetOrdinal("DataGeracao")),
                                     reader.GetString(reader.GetOrdinal("Conteudo")),
-                                    reader.GetString(reader.GetOrdinal("idFuncionario"))
+                                    reader.GetInt32(reader.GetOrdinal("idFuncionario"))
                                 );
                             }
                         }
@@ -81,19 +81,20 @@ namespace BMW.Data.Data
             return null;
         }
 
+
         // Insere ou atualiza um relatório na base de dados
         public void Put(Relatorio relatorio)
         {
             string query = ContainsKey(relatorio.Id)
-                ? "UPDATE Relatorio SET Tipo = @Tipo, DataGeracao = @DataGeracao, Conteudo = @Conteudo, idFuncionario = @IdFuncionario WHERE Id = @Id"
-                : "INSERT INTO Relatorio (idRelatorio, Tipo, DataGeracao, Conteudo, idFuncionario) VALUES (@Id, @Tipo, @DataGeracao, @Conteudo, @IdFuncionario)";
+                ? "UPDATE Relatorio SET Tipo = @Tipo, DataGeracao = @DataGeracao, Conteudo = @Conteudo, idFuncionario = @IdFuncionario WHERE idRelatorio = @Id"
+                : "INSERT INTO Relatorio (Tipo, DataGeracao, Conteudo, idFuncionario) VALUES (@Tipo, @DataGeracao, @Conteudo, @IdFuncionario)";
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Id", relatorio.Id);
+                        if (ContainsKey(relatorio.Id)) command.Parameters.AddWithValue("@Id", relatorio.Id);
                         command.Parameters.AddWithValue("@Tipo", relatorio.Tipo);
                         command.Parameters.AddWithValue("@DataGeracao", relatorio.DataGeracao);
                         command.Parameters.AddWithValue("@Conteudo", relatorio.Conteudo);
@@ -105,9 +106,11 @@ namespace BMW.Data.Data
             }
             catch (Exception ex)
             {
-                throw new DAOException($"Erro ao salvar relatório com ID {relatorio.Id}: {ex.Message}");
+                throw new DAOException($"Erro ao salvar relatório: {ex.Message}");
             }
         }
+        
+
 
         // Remove um relatório pelo ID
         public void Remove(int id)
@@ -136,6 +139,7 @@ namespace BMW.Data.Data
         {
             string query = "SELECT * FROM Relatorio";
             var relatorios = new List<Relatorio>();
+        
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
@@ -147,13 +151,14 @@ namespace BMW.Data.Data
                         {
                             while (reader.Read())
                             {
-                                var relatorio = new Relatorio(
-                                    reader.GetInt32(reader.GetOrdinal("idRelatorio")),
-                                    reader.GetInt32(reader.GetOrdinal("Tipo")),
-                                    reader.GetDateTime(reader.GetOrdinal("DataGeracao")),
-                                    reader.GetString(reader.GetOrdinal("Conteudo")),
-                                    reader.GetString(reader.GetOrdinal("idFuncionario"))
-                                );
+                                var relatorio = new Relatorio
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("idRelatorio")),
+                                    Tipo = reader.GetInt32(reader.GetOrdinal("Tipo")), // Supondo que "Tipo" é um inteiro no banco
+                                    DataGeracao = reader.GetDateTime(reader.GetOrdinal("DataGeracao")),
+                                    Conteudo = reader.GetString(reader.GetOrdinal("Conteudo")), // Certifique-se que "Conteudo" é VARCHAR no banco
+                                    IdFuncionario = reader.GetInt32(reader.GetOrdinal("idFuncionario"))
+                                };
                                 relatorios.Add(relatorio);
                             }
                         }
@@ -164,6 +169,7 @@ namespace BMW.Data.Data
             {
                 throw new DAOException($"Erro ao obter todos os relatórios: {ex.Message}");
             }
+        
             return relatorios;
         }
     }

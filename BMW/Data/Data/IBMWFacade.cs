@@ -44,6 +44,7 @@ namespace BMW.Data.Data
 
         // 7. Gestão de Relatórios
         void CriarRelatorio(int tipo, string conteudo, int funcionarioId);
+        List<Relatorio> GetRelatorios();
         Relatorio? DownloadRelatorio(int relatorioId);
 
         // 8. Gestão de Fases de Montagem

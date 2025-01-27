@@ -1,5 +1,8 @@
 @page "/funcionario/relatorios"
+@using BMW.Data.Data
 @using BMW.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
 @inject UserState UserState
 
 <PageTitle>Relatórios</PageTitle>
@@ -13,55 +16,72 @@
     Button2Text="Relatórios"
     Button2Href="/funcionario/relatorios"
     Button2Icon="📄"
-    Title="Relatórios de Desempenho">
+    Title="Gestão de Relatórios">
 
     <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Descrição</th>
-                <th>Data</th>
-                <th>Estado</th>
+                <th>Data de Geração</th>
+                <th>Tipo</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>001</td>
-                <td>Relatório de Produção - Setembro</td>
-                <td>01-10-2024</td>
-                <td>Concluído</td>
-                <td>
-                    <button class="btn">Visualizar</button>
-                    <button class="btn">Download</button>
-                </td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>Relatório de Erros na Linha</td>
-                <td>15-09-2024</td>
-                <td>Em Análise</td>
-                <td>
-                    <button class="btn">Visualizar</button>
-                </td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>Relatório de Expedição</td>
-                <td>10-09-2024</td>
-                <td>Concluído</td>
-                <td>
-                    <button class="btn">Visualizar</button>
-                    <button class="btn">Download</button>
-                </td>
-            </tr>
+            @if (ListaRelatorios.Any())
+            {
+                @foreach (var relatorio in ListaRelatorios)
+                {
+                    <tr>
+                        <td>@relatorio.Id</td>
+                        <td>@relatorio.DataGeracao.ToString("dd-MM-yyyy")</td>
+                        <td>@(relatorio.Tipo == 1 ? "Encomendas" : "Outro")</td>
+                        <td>
+                            <button class="btn" @onclick="() => VisualizarRelatorio(relatorio.Id)">Visualizar</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">Nenhum relatório encontrado.</td>
+                </tr>
+            }
         </tbody>
     </table>
 
-    <div class="action-container">
-        <button class="btn-create">Criar Relatório</button>
+    <div class="actions">
+        <button class="btn btn-primary" @onclick="CriarRelatorio">Criar Relatório</button>
     </div>
 </TableLayout>
+
+@code {
+    private List<Relatorio> ListaRelatorios = new();
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            ListaRelatorios = BMWFacade.GetInstance().GetRelatorios().ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar relatórios: {ex.Message}");
+        }
+    }
+
+    private void CriarRelatorio()
+    {
+        NavigationManager.NavigateTo("/relatorios/criar");
+    }
+
+    private void VisualizarRelatorio(int idRelatorio)
+    {
+        Console.WriteLine($"Visualizando o relatório com ID: {idRelatorio}");
+        // Aqui poderia redirecionar para uma página detalhada do relatório
+    }
+}
 
 <style>
     .table {
@@ -86,25 +106,6 @@
 
     .btn {
         background-color: #007bff;
-        color: #ffffff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
-
-    /* Estilo para o botão Criar Relatório */
-    .action-container {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .btn-create {
-        background-color: #007bff; /* Verde */
         color: white;
         border: none;
         border-radius: 5px;
@@ -114,7 +115,21 @@
         transition: background-color 0.3s ease;
     }
 
-    .btn-create:hover {
-        background-color: #218838; /* Verde mais escuro */
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-primary {
+        background-color: #28a745;
+    }
+
+    .btn-primary:hover {
+        background-color: #218838;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
     }
 </style>

@@ -1,0 +1,146 @@
+@page "/relatorios/criar"
+@using BMW.Data.Data
+@using BMW.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
+@inject UserState UserState
+
+<PageTitle>Criar Relatório</PageTitle>
+
+<TableLayout 
+    UserName="@UserState.UserName"
+    UserRole="Funcionário"
+    Button1Text="Gestão de Encomendas"
+    Button1Href="/funcionario/gestor-encomendas"
+    Button1Icon="📦"
+    Button2Text="Relatórios"
+    Button2Href="/funcionario/relatorios"
+    Button2Icon="📄"
+    Title="Criar Relatório">
+
+    <div class="form-container">
+        <h3>Gerar Relatório</h3>
+        <form>
+            <div class="form-group">
+                <label>Tipo de Relatório:</label>
+                <select @bind="TipoRelatorio" class="form-control">
+                    <option value="1">Encomendas</option>
+                    <option value="2">Outro</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" @onclick="GerarRelatorio">Gerar Relatório</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</TableLayout>
+
+@code {
+    private int TipoRelatorio = 1;
+
+    private void GerarRelatorio()
+    {
+        try
+        {
+            // Gerar o conteúdo do relatório dinamicamente
+            string conteudo = TipoRelatorio == 1
+                ? GerarConteudoRelatorioEncomendas()
+                : "Relatório do tipo genérico gerado.";
+
+            // Obter o ID do funcionário autenticado
+            int idFuncionario = UserState.UserId;
+
+            // Chamar o método para criar o relatório
+            BMWFacade.GetInstance().CriarRelatorio(TipoRelatorio, conteudo, idFuncionario);
+
+            Console.WriteLine("Relatório gerado com sucesso!");
+            NavigationManager.NavigateTo("/funcionario/relatorios");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao gerar relatório: {ex.Message}");
+        }
+    }
+
+    private string GerarConteudoRelatorioEncomendas()
+    {
+        // Exemplo de lógica para gerar o conteúdo do relatório de encomendas
+        var encomendas = BMWFacade.GetInstance().GetAllEncomendas();
+        if (!encomendas.Any())
+        {
+            return "Nenhuma encomenda disponível para gerar o relatório.";
+        }
+
+        string conteudo = "Relatório de Encomendas:\n";
+        foreach (var encomenda in encomendas)
+        {
+            conteudo += $"- Encomenda #{encomenda.Id}, Data: {encomenda.DataRegisto.ToShortDateString()}, Estado: {encomenda.Estado}\n";
+        }
+
+        return conteudo;
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/funcionario/relatorios");
+    }
+}
+
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
