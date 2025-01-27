@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
 
 <PageTitle>BMW Assembly Manager</PageTitle>
 
@@ -12,11 +13,23 @@
             <h2>Assembly Manager</h2>
         </div>
         <div class="navigation-buttons">
-            <NavLink href="/login" class="btn btn-primary">Login</NavLink>
-            <NavLink href="/register" class="btn btn-primary">Register</NavLink>
+            <button class="btn btn-primary" @onclick="NavigateToLogin">Login</button>
+            <button class="btn btn-primary" @onclick="NavigateToRegister">Register</button>
         </div>
     </div>
 </div>
+
+@code {
+    private void NavigateToLogin()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private void NavigateToRegister()
+    {
+        NavigationManager.NavigateTo("/register");
+    }
+}
 
 <style>
     html, body {

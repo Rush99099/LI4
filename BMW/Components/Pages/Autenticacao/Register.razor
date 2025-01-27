@@ -1,6 +1,7 @@
 @page "/register"
 @using BMW.Data.Data
 @using BMW.Data.Models
+@inject NavigationManager NavigationManager
 
 <PageTitle>Register</PageTitle>
 
@@ -17,7 +18,7 @@
             <input type="text" @bind="utilizador.Nome" placeholder="Enter your name" class="form-input" />
             <input type="email" @bind="utilizador.Email" placeholder="Enter your email" class="form-input" />
             <input type="password" @bind="utilizador.Password" placeholder="Enter your password" class="form-input" />
-            <NavLink href="/login" class="btn btn-primary" @onclick="HandleRegister">Register</NavLink>
+            <button class="btn btn-primary" @onclick="HandleRegister">Register</button>
         </div>
     </div>
 </div>
@@ -39,6 +40,8 @@
             BMWFacade.GetInstance().Registar(utilizador.Email, utilizador.Password, utilizador.Nome, true);
 
             Console.WriteLine("Registration successful.");
+
+            NavigationManager.NavigateTo("/");
         }
         catch (Exception ex)
         {
