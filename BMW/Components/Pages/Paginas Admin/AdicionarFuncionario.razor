@@ -1,6 +1,7 @@
 @page "/admin/gestor-funcionarios/adicionar-funcionario"
-
-<PageTitle>Adicionar Funcionário</PageTitle>
+@using BMW.Data.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
 
 <TableLayout 
     UserName="Diogo Fernandes"
@@ -11,45 +12,71 @@
     Button2Text="Gestão de Veículos"
     Button2Href="/admin/gestor-veiculos"
     Button2Icon="🚗"
-    Title="">
+    Title="Adicionar Funcionário">
 
     <div class="form-container">
         <h3>Adicionar Funcionário</h3>
         <form>
             <div>
                 <label>Nome:</label>
-                <input type="text" class="form-input" @bind="novoFuncionario.Nome" placeholder="Digite o nome" />
+                <input type="text" @bind="nome" placeholder="Nome do Funcionário" class="form-input" />
             </div>
             <div>
                 <label>Email:</label>
-                <input type="email" class="form-input" @bind="novoFuncionario.Email" placeholder="Digite o email" />
+                <input type="email" @bind="email" placeholder="Email do Funcionário" class="form-input" />
             </div>
             <div>
                 <label>Password:</label>
-                <input type="password" class="form-input" @bind="novoFuncionario.Password" placeholder="Digite a senha" />
+                <input type="password" @bind="password" placeholder="Password" class="form-input" />
+            </div>
+            <div>
+                <label>ID da Posição:</label>
+                <input type="number" @bind="posicaoId" placeholder="ID da Posição" class="form-input" />
+            </div>
+            <div>
+                <label>ID do Supervisor (Opcional):</label>
+                <input type="number" @bind="supervisorId" placeholder="ID do Supervisor" class="form-input" />
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-success" @onclick="SalvarFuncionario">Salvar</button>
-                <NavLink class="btn btn-secondary" href="/admin/gestor-funcionarios">Cancelar</NavLink>
+                <button type="button" class="btn btn-success" @onclick="AddFuncionario">Salvar</button>
+                <button class="btn btn-secondary" @onclick="Cancelar" type="button">Cancelar</button>
             </div>
         </form>
     </div>
 </TableLayout>
 
 @code {
-    private Funcionario novoFuncionario = new Funcionario();
+    private string nome = string.Empty;
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private int posicaoId;
+    private int? supervisorId;
 
-    private void SalvarFuncionario()
+    private void AddFuncionario()
     {
-        // Implementar lógica para adicionar funcionário
-        Console.WriteLine($"Adicionado: {novoFuncionario.Nome}, {novoFuncionario.Email}");
+        try
+        {
+            if (string.IsNullOrEmpty(nome) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || posicaoId <= 0)
+            {
+                Console.WriteLine("Todos os campos obrigatórios devem ser preenchidos.");
+                return;
+            }
+
+            // Adicionar funcionário utilizando BMWFacade
+            BMWFacade.GetInstance().AddFuncionario(nome, email, password, DateTime.Today, posicaoId, supervisorId);
+
+            Console.WriteLine("Funcionário adicionado com sucesso!");
+            NavigationManager.NavigateTo("/admin/gestor-funcionarios");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao adicionar funcionário: {ex.Message}");
+        }
     }
 
-    private class Funcionario
+    private void Cancelar()
     {
-        public string Nome { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        NavigationManager.NavigateTo("/admin/gestor-funcionarios");
     }
 }
 
@@ -60,9 +87,8 @@
         border: 1px solid #ddd;
         border-radius: 10px;
         max-width: 400px;
-        margin: auto;
+        margin: 20px auto;
         color: black;
-        margin-top: 50px;
     }
 
     .form-container h3 {

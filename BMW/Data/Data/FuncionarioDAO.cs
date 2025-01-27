@@ -22,29 +22,51 @@ namespace BMW.Data.Data
             }
             return _instance;
         }
-
-        // Verifica se um funcionário existe na base de dados pelo ID
-        public bool ContainsKey(int idFuncionario)
+        public static bool PosicaoExiste(int posicaoId)
         {
-            string query = "SELECT COUNT(*) FROM Funcionario WHERE idFuncionario = @IdFuncionario";
+            string query = "SELECT COUNT(*) FROM Posicao WHERE idPosicao = @Id";
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@IdFuncionario", idFuncionario);
+                        command.Parameters.AddWithValue("@Id", posicaoId);
                         connection.Open();
-                        int count = (int)command.ExecuteScalar();
+                        long count = (long)command.ExecuteScalar(); // O COUNT(*) retorna long
                         return count > 0;
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new DAOException($"Erro ao verificar existência do funcionário com ID {idFuncionario}: {ex.Message}");
+                throw new DAOException($"Erro ao verificar existência da posição com ID {posicaoId}: {ex.Message}");
             }
         }
+
+        // Verifica se um funcionário existe na base de dados pelo ID
+        public bool ContainsKey(int id)
+        {
+            string query = "SELECT COUNT(*) FROM Funcionario WHERE idFuncionario = @Id";
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", id);
+                        connection.Open();
+                        long count = (long)command.ExecuteScalar(); // O COUNT(*) retorna long
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DAOException($"Erro ao verificar existência do funcionário com ID {id}: {ex.Message}");
+            }
+        }
+
 
         // Obtém um funcionário pelo ID
         public Funcionario? Get(int idFuncionario)
@@ -152,7 +174,7 @@ namespace BMW.Data.Data
                                     reader.GetInt32(reader.GetOrdinal("idFuncionario")),
                                     reader.GetDateTime(reader.GetOrdinal("ContractDate")),
                                     reader.GetInt32(reader.GetOrdinal("Posicao")),
-                                    reader.GetInt32(reader.GetOrdinal("supervisor")) 
+                                    reader.IsDBNull(reader.GetOrdinal("supervisor")) ? (int?)null : reader.GetInt32("supervisor")
                                 );
                                 funcionarios.Add(funcionario);
                             }

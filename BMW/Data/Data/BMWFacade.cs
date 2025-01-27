@@ -109,14 +109,50 @@ namespace BMW.Data.Data
         {
             return _funcionarioDAO.GetAll();
         }
-        
+
+
         public void AddFuncionario(string nome, string email, string password, DateTime dataContratacao, int posicaoId, int? supervisor)
         {
-            var utilizador = new Utilizador(email, nome, password, false);
-            var funcionario = new Funcionario(0, dataContratacao, posicaoId, supervisor);
-            _utilizadorDAO.Put(utilizador);
-            _funcionarioDAO.Put(funcionario);
+            try
+            {
+                // 1. Validar a posição
+                if (!FuncionarioDAO.PosicaoExiste(posicaoId))
+                {
+                    throw new Exception($"A posição com ID {posicaoId} não existe. Verifique o ID da posição e tente novamente.");
+                }
+
+                // 2. Criar o utilizador associado ao funcionário
+                var utilizador = new Utilizador(email, nome, password, false);
+                _utilizadorDAO.Put(utilizador);
+
+                // 3. Obter o ID do utilizador recém-criado
+                var utilizadorCriado = _utilizadorDAO.GetByEmail(email);
+                if (utilizadorCriado == null)
+                {
+                    throw new Exception("Erro ao criar utilizador associado ao funcionário.");
+                }
+
+                // 4. Validar o supervisor
+                if (supervisor.HasValue && !_funcionarioDAO.ContainsKey(supervisor.Value))
+                {
+                    Console.WriteLine($"Supervisor com ID {supervisor.Value} não encontrado. Definindo como NULL.");
+                    supervisor = null; // Se o supervisor não existe, define como NULL
+                }
+
+                // 5. Criar o funcionário com o ID do utilizador
+                var funcionario = new Funcionario(utilizadorCriado.IdUtilizador, dataContratacao, posicaoId, supervisor);
+                _funcionarioDAO.Put(funcionario);
+
+                Console.WriteLine("Funcionário adicionado com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao adicionar funcionário: {ex.Message}", ex);
+            }
         }
+
+
+
         
         public void DeleteFuncionario(int funcionarioId)
         {

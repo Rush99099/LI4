@@ -1,4 +1,7 @@
 @page "/admin/gestor-veiculos"
+@using BMW.Data.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
 
 <PageTitle>Gestão de Veículos</PageTitle>
 
@@ -19,41 +22,75 @@
                 <th>ID</th>
                 <th>Modelo</th>
                 <th>Preço Base</th>
+                <th>Data de Adição</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>001</td>
-                <td>BMW i7</td>
-                <td>75.000€</td>
-                <td><button class="btn btn-danger" @onclick="() => RemoverVeiculo(1)">Remover</button></td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>BMW X6</td>
-                <td>60.000€</td>
-                <td><button class="btn btn-danger" @onclick="() => RemoverVeiculo(2)">Remover</button></td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>BMW M4 Coupé</td>
-                <td>85.000€</td>
-                <td><button class="btn btn-danger" @onclick="() => RemoverVeiculo(3)">Remover</button></td>
-            </tr>
+            @if (veiculos == null || !veiculos.Any())
+            {
+                <tr>
+                    <td colspan="5">Nenhum veículo encontrado.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var veiculo in veiculos)
+                {
+                    <tr>
+                        <td>@veiculo.Id</td>
+                        <td>@veiculo.Modelo</td>
+                        <td>@string.Format("{0:C}", veiculo.PrecoBase)</td>
+                        <td>@veiculo.DataAdicao.ToShortDateString()</td>
+                        <td>
+                            <button class="btn btn-danger" @onclick="() => RemoverVeiculo(veiculo.Id)">Remover</button>
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
 
     <div class="actions">
-        <NavLink class="btn btn-primary" href="/admin/gestor-veiculos/adicionar-veiculo">Adicionar Veículo</NavLink>
+        <button class="btn btn-primary" @onclick="NavigateToAdicionarVeiculo">Adicionar Veículo</button>
     </div>
 </TableLayout>
 
 @code {
+    private List<Veiculo> veiculos = new List<Veiculo>();
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            // Obter a lista de veículos do BMWFacade
+            veiculos = BMWFacade.GetInstance().GetCatalogo().ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar veículos: {ex.Message}");
+        }
+    }
+
     private void RemoverVeiculo(int id)
     {
-        // Implementar lógica para remover veículo por ID
-        Console.WriteLine($"Removendo veículo com ID: {id}");
+        try
+        {
+            BMWFacade.GetInstance().DeleteVeiculo(id);
+            Console.WriteLine($"Veículo com ID {id} removido com sucesso.");
+            
+            // Atualizar a lista de veículos após a remoção
+            veiculos = BMWFacade.GetInstance().GetCatalogo().ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao remover veículo: {ex.Message}");
+        }
+    }
+
+    private void NavigateToAdicionarVeiculo()
+    {
+        NavigationManager.NavigateTo("/admin/gestor-veiculos/adicionar-veiculo");
     }
 }
 

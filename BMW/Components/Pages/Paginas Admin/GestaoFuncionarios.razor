@@ -1,4 +1,7 @@
 @page "/admin/gestor-funcionarios"
+@using BMW.Data.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
 
 <PageTitle>Gestão de Funcionários</PageTitle>
 
@@ -18,50 +21,84 @@
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Email</th>
+                <th>Data de Contratação</th>
+                <th>Posição</th>
+                <th>Supervisor</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>001</td>
-                <td>João Silva</td>
-                <td>joao.silva@bmwmanager.com</td>
-                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(1)">Remover</button></td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>Maria Oliveira</td>
-                <td>maria.oliveira@bmwmanager.com</td>
-                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(2)">Remover</button></td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>Pedro Almeida</td>
-                <td>pedro.almeida@bmwmanager.com</td>
-                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(3)">Remover</button></td>
-            </tr>
-            <tr>
-                <td>004</td>
-                <td>Ana Santos</td>
-                <td>ana.santos@bmwmanager.com</td>
-                <td><button class="btn btn-danger" @onclick="() => RemoverFuncionario(4)">Remover</button></td>
-            </tr>
+            @if (funcionarios == null || !funcionarios.Any())
+            {
+                <tr>
+                    <td colspan="6">Nenhum funcionário encontrado.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var funcionario in funcionarios)
+                {
+                    <tr>
+                        <td>@funcionario.IdFuncionario</td>
+                        <td>@GetNomeFuncionario(funcionario.IdFuncionario)</td>
+                        <td>@funcionario.ContractDate.ToShortDateString()</td>
+                        <td>@funcionario.Posicao</td>
+                        <td>@(funcionario.Supervisor.HasValue ? funcionario.Supervisor.ToString() : "N/A")</td>
+                        <td>
+                            <button class="btn btn-danger" @onclick="() => RemoverFuncionario(funcionario.IdFuncionario)">Remover</button>
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
 
     <div class="actions">
-        <NavLink class="btn btn-primary" href="/admin/gestor-funcionarios/adicionar-funcionario">
-            Adicionar Funcionário
-        </NavLink>
+        <button class="btn btn-primary" @onclick="NavigateToAdicionarFuncionario">Adicionar Funcionário</button>
     </div>
 </TableLayout>
 
 @code {
+    private List<Funcionario> funcionarios = new List<Funcionario>();
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            // Obter a lista de funcionários do BMWFacade
+            funcionarios = BMWFacade.GetInstance().GetFuncionarios().ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar funcionários: {ex.Message}");
+        }
+    }
+
     private void RemoverFuncionario(int id)
     {
-        // Implementar lógica para remover funcionário por ID
-        Console.WriteLine($"Removendo funcionário com ID: {id}");
+        try
+        {
+            BMWFacade.GetInstance().DeleteFuncionario(id);
+            Console.WriteLine($"Funcionário com ID {id} removido com sucesso.");
+
+            funcionarios = BMWFacade.GetInstance().GetFuncionarios().ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao remover funcionário: {ex.Message}");
+        }
+    }
+
+    private string GetNomeFuncionario(int idFuncionario)
+    {
+        // Método fictício para obter o nome do funcionário.
+        // Adapte conforme a implementação real.
+        return BMWFacade.GetInstance().GetUtilizador(idFuncionario).Nome;
+    }
+
+    private void NavigateToAdicionarFuncionario()
+    {
+        NavigationManager.NavigateTo("/admin/gestor-funcionarios/adicionar-funcionario");
     }
 }
 
@@ -94,7 +131,11 @@
         padding: 10px 20px;
         font-size: 1rem;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
     }
 
     .btn-danger {
@@ -102,11 +143,7 @@
     }
 
     .btn-danger:hover {
-        background-color: #a71d2a;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
+        background-color: #bd2130;
     }
 
     .actions {

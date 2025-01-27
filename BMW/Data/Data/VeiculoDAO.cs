@@ -33,7 +33,8 @@ namespace BMW.Data.Data
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
-                        int count = (int)command.ExecuteScalar();
+                        // Cast explícito de long para int
+                        long count = (long)command.ExecuteScalar();
                         return count > 0;
                     }
                 }
@@ -43,6 +44,7 @@ namespace BMW.Data.Data
                 throw new DAOException($"Erro ao verificar existência do veículo com ID {id}: {ex.Message}");
             }
         }
+
 
         // Obtém um veículo pelo ID
         public Veiculo? Get(int id)

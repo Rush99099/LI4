@@ -1,4 +1,7 @@
 @page "/admin/gestor-veiculos/adicionar-veiculo"
+@using BMW.Data.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
 
 <PageTitle>Adicionar Veículo</PageTitle>
 
@@ -18,33 +21,48 @@
         <form>
             <div>
                 <label>Modelo:</label>
-                <input type="text" class="form-input" @bind="novoVeiculo.Modelo" placeholder="Digite o modelo" />
+                <input type="text" @bind="modelo" placeholder="Modelo do Veículo" class="form-input" />
             </div>
             <div>
                 <label>Preço Base:</label>
-                <input type="number" class="form-input" @bind="novoVeiculo.PrecoBase" placeholder="Digite o preço base" />
+                <input type="number" @bind="precoBase" placeholder="Preço Base (€)" class="form-input" />
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-success" @onclick="SalvarVeiculo">Salvar</button>
-                <NavLink class="btn btn-secondary" href="/admin/gestor-veiculos">Cancelar</NavLink>
+                <button type="button" class="btn btn-success" @onclick="AddVeiculo">Salvar</button>
+                <button class="btn btn-secondary" @onclick="Cancelar" type="button">Cancelar</button>
             </div>
         </form>
     </div>
 </TableLayout>
 
 @code {
-    private Veiculo novoVeiculo = new Veiculo();
+    private string modelo = string.Empty;
+    private decimal precoBase;
 
-    private void SalvarVeiculo()
+    private void AddVeiculo()
     {
-        // Implementar lógica para adicionar veículo
-        Console.WriteLine($"Adicionado: {novoVeiculo.Modelo}, {novoVeiculo.PrecoBase}€");
+        try
+        {
+            if (string.IsNullOrEmpty(modelo) || precoBase <= 0)
+            {
+                Console.WriteLine("Todos os campos devem ser preenchidos corretamente.");
+                return;
+            }
+
+            BMWFacade.GetInstance().AddVeiculo(modelo, precoBase, DateTime.Today);
+
+            Console.WriteLine("Veículo adicionado com sucesso!");
+            NavigationManager.NavigateTo("/admin/gestor-veiculos");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao adicionar veículo: {ex.Message}");
+        }
     }
 
-    private class Veiculo
+    private void Cancelar()
     {
-        public string Modelo { get; set; } = string.Empty;
-        public decimal PrecoBase { get; set; }
+        NavigationManager.NavigateTo("/admin/gestor-veiculos");
     }
 }
 
