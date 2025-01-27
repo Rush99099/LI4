@@ -152,8 +152,7 @@ namespace BMW.Data.Data
             string query;
             if (ContainsEmail(value.Email))
             {
-                Console.WriteLine("Test");
-                query = "UPDATE Utilizador SET email = @Email, nome = @Nome, Password = @Password, isCliente = @IsClient WHERE email = @Email";
+                throw new DAOException("Email is already in use.");
             }
             else
             {

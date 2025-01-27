@@ -50,6 +50,16 @@ namespace BMW.Data.Data
             _utilizadorDAO.Put(utilizador);
         }
 
+
+        public Boolean AtualizarPassword(string email, string password)
+        {
+            var user = _utilizadorDAO.GetByEmail(email);
+            if(user != null){
+                _utilizadorDAO.ChangePassword(user.IdUtilizador, password);
+                return true;
+            }else return false;
+        }
+
         public Utilizador? LogIn(string email, string password)
         {
             var utilizador = _utilizadorDAO.GetByEmail(email);

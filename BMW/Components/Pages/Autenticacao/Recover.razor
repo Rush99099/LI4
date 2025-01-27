@@ -1,0 +1,114 @@
+@page "/recover"
+@using BMW.Data.Data
+@using BMW.Data.Models
+@inject NavigationManager NavigationManager
+@using BMW.Data
+
+<PageTitle>Recover password</PageTitle>
+
+<div class="container">
+    <div class="content">
+        <div class="logo">
+            <img src="images/bmw-logo.png" alt="BMW Logo" />
+        </div>
+        <div class="title">
+            <h1>BMW</h1>
+            <h2>Assembly Manager</h2>
+        </div>
+        <div class="form">
+            <input type="email" placeholder="Enter your email" class="form-input" @bind="email" />
+            <input type="password" placeholder="Enter your new password" class="form-input" @bind="password" />
+            <input type="password" placeholder="Confirm your new password" class="form-input" @bind="confirmpassword" />
+            <button class="btn btn-primary" @onclick="HandleRecover">Change password</button>
+        </div>
+    </div>
+</div>
+
+@inject NavigationManager NavigationManager
+@inject UserState UserState
+
+@code {
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string confirmpassword = string.Empty;
+
+    private void HandleRecover()
+    {
+        if(confirmpassword == password){
+            if(BMWFacade.GetInstance().AtualizarPassword(email, password)){
+                NavigationManager.NavigateTo("/login");
+            }else{
+                Console.WriteLine("Email não existe.");
+            }
+        }else Console.WriteLine("Passwords não são iguais.");
+        
+    }
+}
+
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #121212;
+        color: white;
+    }
+
+    .content {
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .logo img {
+        width: 250px;
+        height: auto;
+    }
+
+    .title h1 {
+        margin: 0;
+        font-size: 2.5rem;
+    }
+
+    .title h2 {
+        margin: 0;
+        color: #cccccc;
+        font-size: 1.2rem;
+    }
+
+    .form {
+        margin-top: 40px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #d4d4d4;
+        color: black;
+        font-size: 16px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>

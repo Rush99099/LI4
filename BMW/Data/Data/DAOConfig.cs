@@ -7,7 +7,7 @@ namespace BMW.Data.Data
     internal class DAOconfig
     {
         public const string USER = "root";
-        public const string PASSWORD = "a100746";
+        public const string PASSWORD = "root";
         public const string MACHINE = "localhost";
         public const string DATABASE = "ASSEMBLYMNGR";
         
@@ -18,7 +18,7 @@ namespace BMW.Data.Data
             builder.UserID = USER;
             builder.Password = PASSWORD;
             builder.Database = DATABASE;
-            builder.Port = 3306;
+            builder.Port = 3307;
             return builder.ConnectionString;
         }
     }

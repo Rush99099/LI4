@@ -19,6 +19,7 @@
             <input type="email" placeholder="Enter your email" class="form-input" @bind="email" />
             <input type="password" placeholder="Enter your password" class="form-input" @bind="password" />
             <button class="btn btn-primary" @onclick="HandleLogin">Login</button>
+            <button class="btn btn-primary" @onclick="NavigateToRecover">Recover password</button>
         </div>
     </div>
 </div>
@@ -68,6 +69,9 @@
         {
             Console.WriteLine($"Erro ao fazer login: {ex.Message}");
         }
+    }
+    private void NavigateToRecover(){
+        NavigationManager.NavigateTo("/recover");
     }
 }
 
@@ -122,6 +126,7 @@
     .btn {
         width: 100%;
         padding: 12px;
+        margin-bottom: 15px;
         font-size: 16px;
         background-color: #007bff;
         border: none;
