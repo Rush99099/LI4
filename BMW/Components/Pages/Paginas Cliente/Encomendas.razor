@@ -1,12 +1,13 @@
 @page "/encomendas"
+@using BMW.Data.Data
 
 <PageTitle>Encomendas</PageTitle>
 
 <TableLayout 
-    UserName="Diogo Fernandes"
+    UserName="Diogo Fernandes" 
     UserRole="Cliente"
     Button1Text="Encomendas"
-    Button1Href="/encomendas"
+    Button1Href="@Button1Href" 
     Button1Icon="📦"
     Button2Text="Catálogo"
     Button2Href="/catalogo"
@@ -25,19 +26,76 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>0032</td>
-                <td>BMW i7</td>
-                <td>12-09-2024</td>
-                <td>Em Produção</td>
-                <td>🔔</td>
-                <td>
-                    <NavLink href="/encomendas/acompanhar/0032" class="btn">Acompanhar</NavLink>
-                </td>
-            </tr>
+            @if (ListaEncomendas.Count > 0)
+            {
+                @foreach (var encomenda in ListaEncomendas)
+                {
+                    <tr>
+                        <td>@encomenda.Id</td>
+                        <td>@encomenda.Veiculo</td>
+                        <td>@encomenda.Data.ToString("dd-MM-yyyy")</td>
+                        <td>@encomenda.Estado</td>
+                        <td>@(encomenda.TemAlerta ? "🔔" : "")</td>
+                        <td>
+                            <NavLink href="@($"/encomendas/acompanhar/{encomenda.Id}")" class="btn">Acompanhar</NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" style="text-align:center;">Não há encomendas registadas.</td>
+                </tr>
+            }
         </tbody>
     </table>
 </TableLayout>
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+
+    private string Button1Href => $"/encomendas/{UserId}";
+
+    private List<EncomendaViewModel> ListaEncomendas = new();
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            // Carregar as encomendas com base no ID do utilizador
+            var facade = BMWFacade.GetInstance();
+            var encomendas = facade.GetListaEncomendas(UserId);
+
+            // Transformar as encomendas em um formato para exibição
+            foreach (var encomenda in encomendas)
+            {
+                ListaEncomendas.Add(new EncomendaViewModel
+                {
+                    Id = encomenda.Id,
+                    Veiculo = facade.GetCatalogo().FirstOrDefault(v => v.Id == encomenda.IdVeiculo)?.Modelo ?? "Desconhecido",
+                    Data = encomenda.DataRegisto,
+                    Estado = "Em Produção", // Ajustar sabendo o estado real
+                    TemAlerta = facade.GetAlertas().Any(a => a.IdProgresso == encomenda.Id)
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar encomendas: {ex.Message}");
+        }
+    }
+
+    public class EncomendaViewModel
+    {
+        public int Id { get; set; }
+        public string Veiculo { get; set; } = string.Empty;
+        public DateTime Data { get; set; }
+        public string Estado { get; set; } = string.Empty;
+        public bool TemAlerta { get; set; }
+    }
+}
 
 <style>
     .table {

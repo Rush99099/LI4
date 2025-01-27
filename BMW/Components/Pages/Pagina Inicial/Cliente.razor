@@ -1,17 +1,46 @@
 @page "/home"
+@using BMW.Data.Models
+@using BMW.Data.Data
+@inject NavigationManager Navigation
 
-<PageTitle>Página Inicial </PageTitle>
+<PageTitle>Página Inicial</PageTitle>
 
 <SidebarLayout 
-    UserName="Diogo Fernandes"
+    UserName="@userName"
     UserRole="Cliente"
     Button1Text="Encomendas"
-    Button1Href="/encomendas"
+    Button1Href="@GetEncomendasLink()"
     Button1Icon="📦"
     Button2Text="Catálogo"
     Button2Href="/catalogo"
     Button2Icon="🛒" />
 
+@code {
+    private string userName = "Carregando..."; // Default value while loading
 
+    protected override void OnInitialized()
+    {
+        var userId = int.Parse(Navigation.ToAbsoluteUri(Navigation.Uri).Query.Split("=")[1]);
+        LoadUserData(userId);
+    }
 
+    private void LoadUserData(int userId)
+    {
+        try
+        {
+            var user = BMWFacade.GetInstance().GetUtilizador(userId);
+            userName = user.Nome;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar dados do usuário: {ex.Message}");
+            userName = "Erro ao carregar dados";
+        }
+    }
 
+    private string GetEncomendasLink()
+    {
+        var userId = int.Parse(Navigation.ToAbsoluteUri(Navigation.Uri).Query.Split("=")[1]);
+        return $"/encomendas?userId={userId}";
+    }
+}

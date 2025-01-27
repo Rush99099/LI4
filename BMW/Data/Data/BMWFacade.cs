@@ -46,8 +46,8 @@ namespace BMW.Data.Data
         public Utilizador? LogIn(string email, string password)
         {
             Console.WriteLine("email:{0} password:{1}", email, password);
-            email = "carlos.santos@email.com";
-            password = "password123";
+            //email = "carlos.santos@email.com";
+            //password = "password123";
             var utilizador = _utilizadorDAO.GetByEmail(email);
             
             if (utilizador != null && utilizador.Password == password)
