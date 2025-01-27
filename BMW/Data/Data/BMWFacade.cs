@@ -73,7 +73,23 @@ namespace BMW.Data.Data
         // ================================
         // 2. Gestão de Encomendas
         // ================================
-
+        public Estado GetEstadoById(int estadoId)
+        {
+            try
+            {
+                var estado = EstadoDAO.GetInstance().GetById(estadoId);
+                if (estado == null)
+                {
+                    throw new Exception($"Estado com ID {estadoId} não encontrado.");
+                }
+                return estado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao obter estado com ID {estadoId}: {ex.Message}", ex);
+            }
+        }
+        
         public Encomenda? GetEncomendaById(int id)
         {
             var encomenda = EncomendaDAO.GetInstance().Get(id);

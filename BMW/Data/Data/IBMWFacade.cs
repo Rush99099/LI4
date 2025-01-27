@@ -13,6 +13,7 @@ namespace BMW.Data.Data
         Utilizador GetUtilizador(int id);
 
         // 2. Gestão de Encomendas
+        Estado GetEstadoById(int estadoId);
         Encomenda? GetEncomendaById(int id);
         ICollection<Encomenda> GetListaEncomendas(int clienteId);
         ICollection<Encomenda> GetAllEncomendas();

@@ -1,6 +1,9 @@
 @page "/encomendas/acompanhar/{id:int}"
+@using BMW.Data.Data
 @using BMW.Data
+@using BMW.Data.Models
 @inject UserState UserState
+@inject NavigationManager NavigationManager
 
 <PageTitle>Acompanhar Encomenda</PageTitle>
 
@@ -17,25 +20,30 @@
 
     <div class="encomenda-container">
         <div class="encomenda-detalhes">
-            <h3 class="encomenda-titulo">Encomenda <a href="#">#@Id</a></h3>
+            <h3 class="encomenda-titulo">Encomenda #@Id</h3>
             <p><strong>Veículo:</strong> @Modelo</p>
             <p><strong>Data da Encomenda:</strong> @Data</p>
             <p><strong>Estado Atual:</strong> @Estado</p>
-            <p><strong>Fase Atual:</strong> @FaseAtual</p>
-        </div>
-
-        <div class="encomenda-imagem">
-            <img src="images/bmw-montagem-cliente.jpg" alt="Montagem do Veículo" />
+            <p><strong>Fase Atual:</strong> (@FaseAtual.Ordem/@TotalFases) - @FaseAtual.Descricao</p>
+            <p><strong>Progresso da Montagem:</strong> @ProgressoPercentual%</p>
         </div>
 
         <div class="encomenda-progresso">
-            <p class="encomenda-progresso-texto"><strong>Progresso da Montagem:</strong></p>
             <div class="progress-bar">
                 @for (int i = 1; i <= TotalFases; i++)
                 {
-                    <span class="progress-step @(i <= FaseAtualIndex ? "completed" : "")"></span>
+                    <span 
+                        id="fase-@i"
+                        class="progress-step @(i <= FaseAtual.Ordem ? "completed" : "")"
+                        onclick="selectFase(@i)">
+                    </span>
                 }
             </div>
+        </div>
+
+        <div class="fase-imagem">
+            <img id="faseImg" src="@FaseImagem" alt="Fase Atual - @FaseAtual.Descricao" />
+            <p id="faseLegenda" class="fase-legenda">Fase @FaseAtual.Ordem - @FaseAtual.Descricao</p>
         </div>
     </div>
 </TableLayout>
@@ -44,12 +52,46 @@
     [Parameter]
     public int Id { get; set; }
 
-    private string Modelo = "BMW i7";
-    private string Data = "12-09-2024";
-    private string Estado = "Em Produção";
-    private string FaseAtual = "Instalação do Sistema de Arrefecimento";
-    private int FaseAtualIndex = 4; // Exemplo de fase atual
-    private int TotalFases = 7;    // Total de fases do processo
+    private string Modelo = string.Empty;
+    private string Data = string.Empty;
+    private string Estado = string.Empty;
+    private FaseDeMontagem FaseAtual = new();
+    private int TotalFases = 15; // Número total de fases (pode ser obtido do backend)
+    private int ProgressoPercentual = 0;
+    private string FaseImagem = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            var facade = BMWFacade.GetInstance();
+            var encomenda = facade.GetEncomendaById(Id);
+            if (encomenda == null) throw new Exception("Encomenda não encontrada.");
+
+            Modelo = facade.GetVeiculoById(encomenda.IdVeiculo).Modelo;
+            Data = encomenda.DataRegisto.ToString("dd-MM-yyyy");
+            Estado = encomenda.Estado.ToString();
+
+            var progresso = facade.GetProgresso(Id);
+            if (progresso.Any())
+            {
+                var ultimaFase = progresso.OrderByDescending(p => p.IdFase).First();
+                FaseAtual = facade.GetFaseDeMontagemById(ultimaFase.IdFase);
+                ProgressoPercentual = (int)((double)FaseAtual.Ordem / TotalFases * 100);
+            }
+            else
+            {
+                FaseAtual = facade.GetFaseDeMontagemById(1);
+                ProgressoPercentual = 0;
+            }
+
+            FaseImagem = $"images/fases/{FaseAtual.Ordem}.png";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar detalhes da encomenda: {ex.Message}");
+        }
+    }
 }
 
 <style>
@@ -59,8 +101,7 @@
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         text-align: center;
-        height:92%;
-        color: #121212; /* Cor do texto ajustada para preto ou quase preto */
+        color: #121212; /* Cor do texto */
     }
 
     .encomenda-detalhes {
@@ -77,37 +118,93 @@
         color: #333333; /* Cinza escuro para contraste */
     }
 
-    .encomenda-imagem img {
-        width: 100%;
-        max-width: 600px;
-        border-radius: 10px;
-        margin: 20px 0;
-    }
-
     .encomenda-progresso {
         margin: 20px 0;
-    }
-
-    .encomenda-progresso-texto {
-        margin-bottom: 10px;
-        color: #333333; /* Cinza escuro */
     }
 
     .progress-bar {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px;
+        gap: 10px; /* Espaço entre as bolas */
+        flex-direction: row; /* Alinhamento horizontal */
     }
 
     .progress-step {
         width: 15px;
         height: 15px;
         border-radius: 50%;
-        background-color: #cccccc;
+        background-color: #cccccc; /* Cor das bolas não concluídas */
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
     }
 
     .progress-step.completed {
-        background-color: #007bff;
+        background-color: #007bff; /* Cor das bolas concluídas */
+    }
+
+    .progress-step:hover {
+        transform: scale(1.2); /* Leve aumento ao passar o mouse */
+    }
+
+    .fase-imagem img {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    .fase-legenda {
+        color: #333333;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .selected {
+        background-color: #0047b3 !important;
+        transform: scale(1.4);
     }
 </style>
+
+<script>
+    function selectFase(faseIndex) {
+        // Atualizar imagem e legenda
+        const img = document.getElementById('faseImg');
+        const legenda = document.getElementById('faseLegenda');
+
+        img.src = `images/fases/${faseIndex}.png`;
+        legenda.textContent = `Fase ${faseIndex} - ${getDescricaoFase(faseIndex)}`;
+
+        // Resetar estilos anteriores
+        document.querySelectorAll(".progress-step").forEach(step => {
+            step.classList.remove("selected");
+        });
+
+        // Aplicar estilo à fase selecionada
+        const selected = document.getElementById(`fase-${faseIndex}`);
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    function getDescricaoFase(faseIndex) {
+        const descricoes = [
+            "Preparação do chassi",
+            "Montagem do sistema de suspensão",
+            "Instalação do sistema de travagem",
+            "Colocação do motor e transmissão",
+            "Montagem do sistema de escape",
+            "Instalação do sistema elétrico",
+            "Montagem da carroçaria",
+            "Instalação de vidros e portas",
+            "Montagem do interior",
+            "Instalação do sistema de ar condicionado e aquecimento",
+            "Pintura e acabamento externo",
+            "Montagem das rodas e pneus",
+            "Teste de alinhamento e calibragem",
+            "Teste de qualidade e segurança",
+            "Inspeção final e entrega"
+        ];
+        return descricoes[faseIndex - 1] || "Fase desconhecida";
+    }
+</script>

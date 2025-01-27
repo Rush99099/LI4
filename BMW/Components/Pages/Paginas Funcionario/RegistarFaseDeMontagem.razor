@@ -1,6 +1,9 @@
 @page "/funcionario/gestor-encomendas/acompanhar/registar-fase/{id:int}"
 @using BMW.Data
+@using BMW.Data.Models
+@using BMW.Data.Data
 @inject UserState UserState
+@inject NavigationManager NavigationManager
 
 <PageTitle>Registar Fase de Montagem</PageTitle>
 
@@ -16,11 +19,25 @@
     Title="Registar Fase de Montagem">
 
     <div class="form-container">
-        <h3>Registar Fase de Montagem</h3>
+        <h3>Registar Nova Fase de Montagem</h3>
         <form>
             <div>
-                <label>Descrição da Fase:</label>
-                <textarea class="form-input" @bind="fase.Descricao" placeholder="Digite a descrição"></textarea>
+                <label>Data de Início:</label>
+                <input type="datetime-local" @bind="startFase" class="form-input" />
+            </div>
+            <div>
+                <label>Data de Término (Opcional):</label>
+                <input type="datetime-local" @bind="endFase" class="form-input" />
+            </div>
+            <div>
+                <label>Fase Atual:</label>
+                <select @bind="faseId" class="form-input">
+                    <option value="">-- Selecione a Fase --</option>
+                    @foreach (var fase in fases)
+                    {
+                        <option value="@fase.Id">@fase.Descricao</option>
+                    }
+                </select>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn btn-success" @onclick="SalvarFase">Salvar</button>
@@ -34,15 +51,101 @@
     [Parameter]
     public int Id { get; set; }
 
-    private FaseDeMontagem fase = new();
+    private int? faseId; // ID da fase selecionada
+    private DateTime startFase = DateTime.Now;
+    private DateTime? endFase; // Data de término opcional
+    private List<FaseDeMontagem> fases = new(); // Lista de fases disponíveis
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            // Carregar as fases de montagem disponíveis
+            fases = BMWFacade.GetInstance().GetFasesMontagem().ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar fases de montagem: {ex.Message}");
+        }
+    }
 
     private void SalvarFase()
     {
-        Console.WriteLine($"Fase salva para encomenda #{Id}: {fase.Descricao}");
-    }
+        try
+        {
+            if (faseId == null || faseId <= 0)
+            {
+                Console.WriteLine("Por favor, selecione uma fase válida.");
+                return;
+            }
 
-    private class FaseDeMontagem
-    {
-        public string Descricao { get; set; } = string.Empty;
+            // Registar progresso na base de dados
+            BMWFacade.GetInstance().RegistarProgresso(Id, faseId.Value, startFase, endFase, UserState.UserId);
+
+            Console.WriteLine($"Fase de montagem registrada com sucesso para a encomenda #{Id}.");
+            NavigationManager.NavigateTo($"/funcionario/gestor-encomendas/acompanhar/{Id}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao salvar a fase de montagem: {ex.Message}");
+        }
     }
 }
+
+<style>
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        max-width: 500px;
+        margin: 20px auto;
+        color: black;
+    }
+
+    .form-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-success {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
