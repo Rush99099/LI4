@@ -6,19 +6,15 @@ namespace BMW.Data.Data
 {
     internal class DAOconfig
     {
-        public const string USER = "root";
-        public const string PASSWORD = "root";
-        public const string MACHINE = "localhost";
         public const string DATABASE = "ASSEMBLYMNGR";
         
         public static string GetConnectionString()
         {
-            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
-            builder.Server = MACHINE;
-            builder.UserID = USER;
-            builder.Password = PASSWORD;
-            builder.Database = DATABASE;
-            builder.Port = 3307;
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder.DataSource = "localhost,1433";
+            builder.InitialCatalog = DATABASE;
+            builder.TrustServerCertificate = true;
+            builder.IntegratedSecurity = true;
             return builder.ConnectionString;
         }
     }

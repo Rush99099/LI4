@@ -1,6 +1,6 @@
 -- Selecionar o esquema bmwassemblymanager
 USE assemblymngr;
-
+SET IDENTITY_INSERT [Fase de montagem] ON;
 -- Povoar a tabela Utilizador
 INSERT INTO Utilizador (email, nome, Password, isCliente)
 VALUES
@@ -14,7 +14,7 @@ VALUES
 (3, 'Cancelado');
 
 -- Povoar a tabela Fase de montagem
-INSERT INTO `Fase de montagem` (`idEstado de montagem`, `Ordem`, `Descricao`, `TempoExecucaoExpectavel`)
+INSERT INTO [Fase de montagem] (idEstado_de_montagem, Ordem, Descricao, TempoExecucaoExpectavel)
 VALUES
 (1, 1, 'Preparação do chassi', '01:00:00'),
 (2, 2, 'Montagem do sistema de suspensão', '01:30:00'),

@@ -27,13 +27,13 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Posicao WHERE idPosicao = @Id";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", posicaoId);
                         connection.Open();
-                        long count = (long)command.ExecuteScalar(); // O COUNT(*) retorna long
+                        int count = (int)command.ExecuteScalar();
                         return count > 0;
                     }
                 }
@@ -50,13 +50,13 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Funcionario WHERE idFuncionario = @Id";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
-                        long count = (long)command.ExecuteScalar(); // O COUNT(*) retorna long
+                        int count = (int)command.ExecuteScalar();
                         return count > 0;
                     }
                 }
@@ -74,13 +74,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdFuncionario", idFuncionario);
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -112,9 +112,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Funcionario (idFuncionario, ContractDate, Posicao, supervisor) VALUES (@IdFuncionario, @ContractDate, @Posicao, @Supervisor)";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdFuncionario", funcionario.IdFuncionario);
                         command.Parameters.AddWithValue("@ContractDate", funcionario.ContractDate);
@@ -137,9 +137,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Funcionario WHERE idFuncionario = @IdFuncionario";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdFuncionario", idFuncionario);
                         connection.Open();
@@ -160,12 +160,12 @@ namespace BMW.Data.Data
             var funcionarios = new List<Funcionario>();
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -173,7 +173,7 @@ namespace BMW.Data.Data
                                     reader.GetInt32(reader.GetOrdinal("idFuncionario")),
                                     reader.GetDateTime(reader.GetOrdinal("ContractDate")),
                                     reader.GetInt32(reader.GetOrdinal("Posicao")),
-                                    reader.IsDBNull(reader.GetOrdinal("supervisor")) ? (int?)null : reader.GetInt32("supervisor")
+                                    reader.IsDBNull(reader.GetOrdinal("supervisor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("supervisor"))
                                 );
                                 funcionarios.Add(funcionario);
                             }

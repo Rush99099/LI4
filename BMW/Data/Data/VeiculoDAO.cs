@@ -27,14 +27,14 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Veiculo WHERE idVeiculo = @Id";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
                         // Cast explícito de long para int
-                        long count = (long)command.ExecuteScalar();
+                        int count = (int)command.ExecuteScalar();
                         return count > 0;
                     }
                 }
@@ -52,13 +52,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Veiculo WHERE idVeiculo = @Id";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -85,12 +85,12 @@ namespace BMW.Data.Data
         {
             string query = ContainsKey(veiculo.Id)
                 ? "UPDATE Veiculo SET Modelo = @Modelo, PrecoBase = @PrecoBase, DataAdicao = @DataAdicao WHERE idVeiculo = @Id"
-                : "INSERT INTO Veiculo (idVeiculo, Modelo, PrecoBase, DataAdicao) VALUES (@Id, @Modelo, @PrecoBase, @DataAdicao)";
+                : "INSERT INTO Veiculo (Modelo, PrecoBase, DataAdicao) VALUES (@Modelo, @PrecoBase, @DataAdicao)";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", veiculo.Id);
                         command.Parameters.AddWithValue("@Modelo", veiculo.Modelo);
@@ -113,9 +113,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Veiculo WHERE idVeiculo = @Id";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@Id", id);
                         connection.Open();
@@ -136,12 +136,12 @@ namespace BMW.Data.Data
             var veiculos = new List<Veiculo>();
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

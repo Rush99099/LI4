@@ -25,13 +25,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE email = @email";
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@email", email);
                         con.Open();
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -41,9 +41,9 @@ namespace BMW.Data.Data
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DAOException("Erro no ContainsKey do UtilizadorDAO");
+                throw new DAOException($"Erro no ContainsKey do UtilizadorDAO: {ex.Message}");
             }
             return result;
         }
@@ -54,13 +54,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Key";
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@Key", key);
                         con.Open();
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -83,13 +83,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE idUtilizador = @Key";
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@Key", key);
                         con.Open();
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -97,7 +97,9 @@ namespace BMW.Data.Data
                                 string email = reader.GetString(reader.GetOrdinal("email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
+                                int isClientInt = reader.GetByte(reader.GetOrdinal("isCliente"));
+                                bool isClient;
+                                if(isClientInt == 1) isClient = true; else isClient = false; 
 
                                 utilizador = new Utilizador(id, email, nome, password, isClient);
                             }
@@ -105,9 +107,10 @@ namespace BMW.Data.Data
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DAOException("Erro no Get do UtilizadorDAO");
+                Console.WriteLine(ex.Message);
+                throw new DAOException("Erro no Get do UtilizadorDAO", ex);
             }
             return utilizador;
         }
@@ -117,13 +120,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM utilizador WHERE email = @Email";
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@Email", email);
                         con.Open();
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -131,8 +134,9 @@ namespace BMW.Data.Data
                                 //string email = reader.GetString(reader.GetOrdinal("Email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
-
+                                int isClientInt = reader.GetByte(reader.GetOrdinal("isCliente"));
+                                bool isClient;
+                                if(isClientInt == 1) isClient = true; else isClient = false; 
                                 utilizador = new Utilizador(id, email, nome, password, isClient);
                             }
                         }
@@ -160,9 +164,9 @@ namespace BMW.Data.Data
             }
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         //cmd.Parameters.AddWithValue("@Key", key);
                         cmd.Parameters.AddWithValue("@Email", value.Email);
@@ -188,9 +192,9 @@ namespace BMW.Data.Data
                 string query = "DELETE FROM Utilizador WHERE idUtilizador = @Key";
                 try
                 {
-                    using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                    using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                     {
-                        using (MySqlCommand cmd = new MySqlCommand(query, con))
+                        using (SqlCommand cmd = new SqlCommand(query, con))
                         {
                             cmd.Parameters.AddWithValue("@Key", key);
                             con.Open();
@@ -211,12 +215,12 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador";
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -224,7 +228,9 @@ namespace BMW.Data.Data
                                 string email = reader.GetString(reader.GetOrdinal("email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
+                                int isClientInt = reader.GetByte(reader.GetOrdinal("isCliente"));
+                                bool isClient;
+                                if(isClientInt == 1) isClient = true; else isClient = false; 
 
                                 utilizadores.Add(new Utilizador(id, email, nome, password, isClient));
                             }
@@ -245,12 +251,12 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Utilizador WHERE isCliente = 1";
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -258,7 +264,9 @@ namespace BMW.Data.Data
                                 string email = reader.GetString(reader.GetOrdinal("email"));
                                 string nome = reader.GetString(reader.GetOrdinal("nome"));
                                 string password = reader.GetString(reader.GetOrdinal("Password"));
-                                bool isClient = reader.GetBoolean(reader.GetOrdinal("isCliente"));
+                                int isClientInt = reader.GetByte(reader.GetOrdinal("isCliente"));
+                                bool isClient;
+                                if(isClientInt == 1) isClient = true; else isClient = false; 
 
                                 utilizadores.Add(new Utilizador(id, email, nome, password, isClient));
                             }
@@ -279,9 +287,9 @@ namespace BMW.Data.Data
             query = "UPDATE Utilizador SET Password = @password WHERE idUtilizador = @IdUtilizador";
             try
             {
-                using (MySqlConnection con = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection con = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@IdUtilizador", id);
                         cmd.Parameters.AddWithValue("@password", password);

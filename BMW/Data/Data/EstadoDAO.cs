@@ -1,4 +1,5 @@
 using BMW.Data.Models;
+using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,11 @@ namespace BMW.Data.Data
 
             try
             {
-                using (var connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (var connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
                     connection.Open();
 
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection))
                     {
                         using (var reader = command.ExecuteReader())
                         {
@@ -41,8 +42,8 @@ namespace BMW.Data.Data
                             {
                                 var estado = new Estado
                                 {
-                                    IdEstado = reader.GetInt32("idEstado"),
-                                    NomeEstado = reader.GetString("Estado")
+                                    IdEstado = reader.GetInt32(reader.GetOrdinal("idEstado")),
+                                    NomeEstado = reader.GetString(reader.GetOrdinal("Estado"))
                                 };
                                 estados.Add(estado);
                             }
@@ -65,11 +66,11 @@ namespace BMW.Data.Data
 
             try
             {
-                using (var connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (var connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
                     connection.Open();
 
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@idEstado", idEstado);
 
@@ -79,8 +80,8 @@ namespace BMW.Data.Data
                             {
                                 return new Estado
                                 {
-                                    IdEstado = reader.GetInt32("idEstado"),
-                                    NomeEstado = reader.GetString("Estado")
+                                    IdEstado = reader.GetInt32(reader.GetOrdinal("idEstado")),
+                                    NomeEstado = reader.GetString(reader.GetOrdinal("Estado"))
                                 };
                             }
                         }
@@ -104,11 +105,11 @@ namespace BMW.Data.Data
 
             try
             {
-                using (var connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (var connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
                     connection.Open();
 
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEstado", estado.IdEstado);
                         command.Parameters.AddWithValue("@Descricao", estado.NomeEstado);
@@ -130,11 +131,11 @@ namespace BMW.Data.Data
 
             try
             {
-                using (var connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (var connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
                     connection.Open();
 
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@idEstado", idEstado);
 
@@ -156,11 +157,11 @@ namespace BMW.Data.Data
 
             try
             {
-                using (var connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (var connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
                     connection.Open();
 
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@idEstado", idEstado);
 

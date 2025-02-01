@@ -1,6 +1,7 @@
 using BMW.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
+using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
 
 namespace BMW.Data.Data
@@ -28,9 +29,9 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Progresso WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", idEncomenda);
                         command.Parameters.AddWithValue("@IdFase", idFase);
@@ -52,14 +53,14 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Progresso WHERE idEncomenda = @IdEncomenda AND idFase = @IdFase";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", idEncomenda);
                         command.Parameters.AddWithValue("@IdFase", idFase);
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -90,9 +91,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Progresso (idEncomenda, idFase, StartFase, EndFase, idFuncionario) VALUES (@IdEncomenda, @IdFase, @StartFase, @EndFase, @IdFuncionario)";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", progresso.IdEncomenda);
                         command.Parameters.AddWithValue("@IdFase", progresso.IdFase);
@@ -117,12 +118,12 @@ namespace BMW.Data.Data
             var progressos = new List<Progresso>();
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
@@ -152,13 +153,13 @@ namespace BMW.Data.Data
             var progressoList = new List<Progresso>();
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdEncomenda", encomendaId);
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

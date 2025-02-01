@@ -29,9 +29,9 @@ namespace BMW.Data.Data
             string query = "SELECT COUNT(*) FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", idAlerta);
                         connection.Open();
@@ -52,13 +52,13 @@ namespace BMW.Data.Data
             string query = "SELECT * FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", idAlerta);
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -88,9 +88,9 @@ namespace BMW.Data.Data
                 : "INSERT INTO Alerta (idAlerta, idProgresso, Mensagem, Data) VALUES (@IdAlerta, @IdProgresso, @Mensagem, @Data)";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", alerta.IdAlerta);
                         command.Parameters.AddWithValue("@IdProgresso", alerta.IdProgresso);
@@ -113,9 +113,9 @@ namespace BMW.Data.Data
             string query = "DELETE FROM Alerta WHERE idAlerta = @IdAlerta";
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@IdAlerta", idAlerta);
                         connection.Open();
@@ -136,12 +136,12 @@ namespace BMW.Data.Data
             var alertas = new List<Alerta>();
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {

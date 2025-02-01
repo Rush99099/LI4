@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using BMW.Data.Models;
+using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 
 namespace BMW.Data.Data
@@ -25,16 +26,16 @@ namespace BMW.Data.Data
         {
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
                     string query = "SELECT * FROM Posicao WHERE idPosicao = @idPosicao";
 
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@idPosicao", idPosicao);
                         connection.Open();
 
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -63,15 +64,15 @@ namespace BMW.Data.Data
 
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(DAOconfig.GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(DAOconfig.GetConnectionString()))
                 {
                     string query = "SELECT * FROM Posicao";
 
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
 
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
